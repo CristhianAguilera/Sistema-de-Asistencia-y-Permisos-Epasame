@@ -1,0 +1,203 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 25 oct 2024, 23:56:43
+    Author     : ADVANCE
+*/
+
+header nav .nav-item .nav-link {
+    color: white;
+}
+
+header nav .nav-item ion-icon {
+    color: white;
+    width: 35px;
+    height: 35px;
+}
+
+header nav .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.Barralateral {
+    position: fixed;
+    width: 220px;
+    height: 100%;
+    background: #64657b;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+
+}
+
+.Barralateral .LogoEpasame {
+
+    margin-top: 20px;
+    width: 180px;
+    height: 100px;
+    margin-left: 15px;
+
+}
+
+.Barralateral .list-group .list-group-item {
+    padding: 20px;
+    background: #64657b;
+    border: #64657b;
+    display: flex;
+}
+
+.Barralateral .list-group .list-group-item:hover {
+    background: #7a7ab8;
+    cursor: pointer;
+
+}
+
+.Barralateral .list-group .list-group-item a {
+    text-decoration: none;
+    color: white;
+    margin-left: 20px;
+
+}
+
+.Barralateral .list-group .list-group-item ion-icon {
+    width: 35px;
+    height: 35px;
+
+}
+
+main {
+    /*border: 2px solid red;*/
+    margin-left: 220px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Ajusta la barra lateral */
+}
+
+.collapse:not(.show)+main {
+    margin-left: 0;
+    /* Si la barra lateral está colapsada, el margen se elimina */
+}
+
+
+.container {
+    /*border: 2px solid blue;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.container #Register-form .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tipo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-enviar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+h2 {
+    text-align: center;
+}
+
+
+.input-group {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    z-index: 1;
+}
+
+.input-group-text {
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-right: none;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+}
+
+.input-group ion-icon {
+    font-size: 24px;
+    color: #333;
+}
+
+.select-date {
+    width: 100%;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    border-left: none;
+    font-size: 16px;
+    background-color: #f4f4f4;
+    transition: background-color 0.3s ease;
+}
+
+.select-date:focus {
+    background-color: #f4f4f4;
+    border-color: #ccc;
+    outline: none;
+    box-shadow: none;
+}
+
+.mensaje{
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Coloca el h2 a la izquierda y el alert a la derecha */
+    padding: 10px;
+}
+
+.mensaje h2 {
+    margin: 0; /* Remueve márgenes adicionales */
+    text-align: center;
+}
+
+.alert {
+    margin: 0;
+    padding: 5px 10px; /* Ajusta el espacio interior si es necesario */
+    font-size: 8px; /* Ajusta el tamaño de fuente */
+}
+
+
+@media (max-width: 1100px) {
+    .Barralateral {
+        transform: translateX(-100%);
+        /* Oculta la barra lateral por completo */
+    }
+
+    .collapse.show .Barralateral {
+        transform: translateX(0);
+        /* Muestra la barra lateral */
+    }
+
+    main {
+        margin-left: 0;
+        /* Elimina el margen en pantallas pequeñas */
+    }
+
+    .fechai{
+        margin-top: 28px;
+    }
+
+    .fechaf{
+        margin-top: 28px;
+    }
+}

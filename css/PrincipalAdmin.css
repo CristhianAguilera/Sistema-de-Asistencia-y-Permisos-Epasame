@@ -1,0 +1,143 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 24 oct 2024, 19:16:35
+    Author     : ADVANCE
+*/
+
+body {
+   
+    font-family: Arial, sans-serif;
+}
+
+header nav .nav-item .nav-link {
+    color: white;
+}
+
+header nav .nav-item ion-icon {
+    color: white;
+    width: 35px;
+    height: 35px;
+}
+
+header nav .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.Barralateral {
+    position: fixed;
+    width: 220px;
+    height: 100%;
+    background: #64657b;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+}
+
+.Barralateral .LogoEpasame {
+
+    margin-top: 20px;
+    width: 180px;
+    height: 100px;
+    margin-left: 15px;
+
+}
+
+.Barralateral .list-group .list-group-item {
+    padding: 20px;
+    background: #64657b;
+    border: #64657b;
+    display: flex;
+}
+
+.Barralateral .list-group .list-group-item:hover {
+    background: #7a7ab8;
+    cursor: pointer;
+
+}
+
+.Barralateral .list-group .list-group-item a {
+    text-decoration: none;
+    color: white;
+    margin-left: 20px;
+
+}
+
+.Barralateral .list-group .list-group-item ion-icon {
+    width: 35px;
+    height: 35px;
+
+}
+
+main {
+    /*border: 2px solid red;*/
+    margin-left: 220px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Ajusta la barra lateral */
+}
+
+.collapse:not(.show)+main {
+    margin-left: 0;
+    /* Si la barra lateral está colapsada, el margen se elimina */
+}
+
+h2{
+    text-align: center;
+}
+
+
+.container {
+    /*border: 2px solid blue;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+
+.container #Register-form .btn-enviar .btn {
+    background-color: black;
+    color: white;
+    width: 250px;
+    border-radius: 10px;
+}
+
+.container #Register-form .dropdown .dropdown-toggle {
+    border: 2px solid #e1e4e8;
+    width: 100%;
+    text-align: left;
+}
+
+
+
+@media (max-width: 1100px) {
+    .Barralateral {
+        transition: transform 0.4s ease;
+        transform: translateX(-100%);
+
+        /* Oculta la barra lateral por completo */
+    }
+
+    .collapse.show .Barralateral {
+        transition: transform 0.4s ease;
+        transform: translateX(0);
+        /* Muestra la barra lateral */
+    }
+
+    main {
+        margin-left: 0;
+        /* Elimina el margen en pantallas pequeñas */
+    }
+
+
+    .container {
+        margin-top: 100px;
+    }
+}

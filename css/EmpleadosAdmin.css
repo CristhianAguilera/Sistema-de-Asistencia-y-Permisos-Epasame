@@ -1,0 +1,220 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 24 oct 2024, 23:32:41
+    Author     : ADVANCE
+*/
+
+
+body{
+    font-family: Arial, sans-serif;
+}
+
+header nav .nav-item .nav-link {
+    color: white;
+}
+
+header nav .nav-item ion-icon {
+    color: white;
+    width: 35px;
+    height: 35px;
+}
+
+header nav .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.Barralateral {
+    position: fixed;
+    width: 220px;
+    height: 100%;
+    background: #64657b;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+    transition: transform 0.4s ease;
+}
+
+.Barralateral .LogoEpasame {
+    margin-top: 20px;
+    width: 180px;
+    height: 100px;
+    margin-left: 15px;
+}
+
+.Barralateral .list-group .list-group-item {
+    padding: 20px;
+    background: #64657b;
+    border: #64657b;
+    display: flex;
+}
+
+.Barralateral .list-group .list-group-item:hover {
+    background: #7a7ab8;
+    cursor: pointer;
+}
+
+.Barralateral .list-group .list-group-item a {
+    text-decoration: none;
+    color: white;
+    margin-left: 20px;
+}
+
+.Barralateral .list-group .list-group-item ion-icon {
+    width: 35px;
+    height: 35px;
+}
+
+main {
+    /*border: 2px solid red;*/
+    margin-left: 220px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Ajusta la barra lateral */
+}
+
+.collapse:not(.show)+main {
+    margin-left: 0;
+    /* Si la barra lateral está colapsada, el margen se elimina */
+}
+
+
+.cuerpo {
+    /*border: 2px solid blue;*/
+    width: 900px;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.cuerpo #Register-form .btn-enviar .btn {
+    background-color: black;
+    color: white;
+    width: 250px;
+    border-radius: 10px;
+}
+
+/* Buscador */
+.buscador-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    z-index: 1;
+}
+
+.input-group-text {
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-right: none;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+}
+
+.input-group ion-icon {
+    font-size: 24px;
+    color: #333;
+}
+
+.buscador {
+    width: 100%;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    border-left: none;
+    font-size: 16px;
+    background-color: #f4f4f4;
+    transition: background-color 0.3s ease;
+}
+
+.buscador:focus {
+    border-color: #ccc;
+    outline: none;
+    box-shadow: none;
+}
+
+/* Main Empleados */
+h2 {
+    text-align: center;
+}
+
+.fila-b .btn-danger {
+    margin-left: 5px;
+}
+
+.table th,
+.table td {
+    padding: 12px 15px; /* Aumenta el padding de las celdas */
+    vertical-align: middle; /* Alinea verticalmente el contenido */
+}
+
+.table td {
+    white-space: nowrap; /* Evita que el contenido se divida en varias líneas */
+}
+
+.fila-b {
+    display: flex;
+    justify-content: space-around; /* Espacia los botones de acción */
+}
+
+/* Estilos responsivos */
+@media (max-width: 1110px) {
+    .fila-b .btn {
+        margin-left: 0px;
+    }
+
+    .fila-b .btn-danger {
+        margin-left: 7;
+    }
+
+}
+
+@media (max-width: 1020px) {
+    .fila-b .btn-danger {
+        margin-left: 0;
+    }
+
+    .fila-b .btn {
+        margin-left: 12px;
+    }
+
+    .input-group {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1010px) {
+    .Barralateral {
+        transition: transform 0.4s ease;
+        transform: translateX(-100%);
+
+        /* Oculta la barra lateral por completo */
+    }
+
+    .collapse.show .Barralateral {
+        transition: transform 0.4s ease;
+        transform: translateX(0);
+        /* Muestra la barra lateral */
+    }
+
+    main {
+        margin-left: 0;
+        /* Elimina el margen en pantallas pequeñas */
+    }
+
+}

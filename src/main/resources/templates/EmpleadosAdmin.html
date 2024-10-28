@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Epasame-Administrador</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/EmpleadosAdmin.css">
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar"
+                            aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <li class="nav-item dropdown d-flex">
+                    <ion-icon name="person-circle-sharp"></ion-icon>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Administrador
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/">Cerrar sesión</a></li>
+                    </ul>
+                    </li>
+                </div>
+            </nav>
+        </header>
+
+        <!--Barra Lateral-->
+        <div class="collapse show " id="sidebar">
+            <div class="Barralateral">
+                <div class="LogoEpasame">
+                    <img src="/image/epasamelogo.png" alt="Epasame Logo" class="img-fluid">
+                </div>
+                <ul class="list-group mt-3">
+                    <li class="list-group-item"><ion-icon name="person-add-outline"></ion-icon><a href="/PrincipalAdmin">Registrar</a>
+                    </li>
+                    <li class="list-group-item" style="background: #7a7ab8;"><ion-icon name="people-outline"></ion-icon><a href="#">Empleados</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="calendar-outline"></ion-icon><a href="/AsistenciasAdmin">Asistencia</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="clipboard-outline"></ion-icon><a href="/PermisosAdmin">Permisos</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="reader-outline"></ion-icon><a href="#">Reporte</a></li>
+                    <li class="list-group-item"><ion-icon name="settings-outline"></ion-icon><a href="#">Configuración</a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <main>
+            <div class="container mt-3">
+                <h2>Lista de Empleados</h2>
+                <div class="buscador-container mt-4">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <ion-icon name="search-outline"></ion-icon>
+                        </span>
+                        <input type="text" id="buscarEmpleado" class="form-control buscador" placeholder="Buscar empleado...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped mt-2">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombres</th>
+                                <th scope="col">Apellidos</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Nº Documento</th>
+                                <th scope="col">Telefono</th>
+                                <th scope="col">Rol</th>
+                                <th scope="col">Contraseña</th>
+                                <th scope="col">Fecha de Ingreso</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- iteraramos sobre los trabajadores para mostrarlas-->
+                            <tr th:each="trabajador : ${trabajadores}">
+                                <td th:text="${trabajador.nombres}" ></td>
+                                <td th:text="${trabajador.apellidos}"></td>
+                                <td th:text="${trabajador.correo}" ></td>
+                                <td th:text="${trabajador.ndocumento}" ></td>
+                                <td th:text="${trabajador.telefono}" ></td>
+                                <td th:text="${trabajador.rol}" ></td>
+                                <td th:text="${trabajador.contraseña}" ></td>
+                                <td th:text="${trabajador.fechaentrada}" ></td>
+                                <td th:text="${trabajador.estado}" ></td>
+                                <td class="fila-b">
+                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editarDatos"
+                                            th:data-id="${trabajador.id}" th:data-nombres="${trabajador.nombres}"
+                                            th:data-apellidos="${trabajador.apellidos}" th:data-correo="${trabajador.correo}"
+                                            th:data-telefono="${trabajador.telefono}"
+                                            th:data-ndocumento="${trabajador.ndocumento}" th:data-tipodocumento="${trabajador.tipodocumento}"
+                                            th:data-rol="${trabajador.rol}"
+                                            th:data-cargo="${trabajador.cargo}" th:data-contraseña="${trabajador.contraseña}"
+                                            th:data-fechaentrada="${trabajador.fechaentrada}"
+                                            >
+                                        <ion-icon name="create-outline"></ion-icon>
+                                    </button>
+                                </td>
+                            </tr>      
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal fade" id="editarDatos" tabindex="-1" aria-labelledby="editarDatosLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editarDatosLabel">Editar Trabajador</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/actualizartrabajador}" method="post" enctype="multipart/form-data" id="Register-form">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="nombres" class="form-label">Nombres (*)</label>
+                                        <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="apellidos" class="form-label">Apellidos (*)</label>
+                                        <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="correoElectronico" class="form-label">Correo electrónico (*)</label>
+                                        <input type="email" class="form-control" id="correoElectronico" name="correoElectronico"
+                                               placeholder="example@mail.com">
+                                    </div>
+                                </div>  
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="tipoDocumento" class="form-label">Tipo de documento (*)</label>
+                                        <select class="form-select" id="tipoDocumento" name="tipoDocumento">
+                                            <option selected disabled>Seleccionar</option>
+                                            <option value="DNI">DNI</option>
+                                            <option value="PASAPORTE">Pasaporte</option>
+                                            <option value="CARNET EXT">Carné de Extranjería</option>
+                                            <option value="RUC">RUC</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="ndocumento" class="form-label">Número de documento (*)</label>
+                                        <input type="tel" class="form-control" id="ndocumento" name="ndocumento" maxlength="15">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="telefono" class="form-label">Teléfono (*)</label>
+                                        <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Teléfono"
+                                               maxlength="9">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">                
+                                    <div class="col-md-4">
+                                        <label for="rol" class="form-label">Rol (*)</label>
+                                        <select class="form-select" id="rol" name="rol">
+                                            <option selected disabled>Seleccionar</option>
+                                            <option value="Administrador">Administrador</option>
+                                            <option value="Trabajador">Trabajador</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="cargo" class="form-label">Cargo (*)</label>
+                                        <input type="text" class="form-control" id="cargo" name="cargo" placeholder="Cargo">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="contraseña" class="form-label">Contraseña (*)</label>
+                                        <input type="text" class="form-control" id="contraseña" name="contraseña" minlength="8"
+                                               placeholder="Cambiar de contraseña" required>
+                                    </div>
+
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="fechaentrada" class="form-label">Fecha de Entrada (*)</label>
+                                        <div>
+                                            <input class="tooltip-panel" id="fechaentrada" type="date"
+                                                   placeholder="Día/Mes/Año" name="fechaentrada" autocomplete="off"
+                                                   format="yyyy-MM-dd">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-2 modal-footer d-flex justify-content-center">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn btn-dark">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" 
+                integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" 
+        crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" 
+                integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" 
+        crossorigin="anonymous"></script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+        <script>
+            let editarDatosModal = document.getElementById('editarDatos');
+
+            editarDatosModal.addEventListener('show.bs.modal', function (event) {
+                let button = event.relatedTarget;
+
+                let nombres = button.getAttribute('data-nombres');
+                let apellidos = button.getAttribute('data-apellidos');
+                let correo = button.getAttribute('data-correo');
+                let telefono = button.getAttribute('data-telefono');
+                let tipodocumento = button.getAttribute('data-tipodocumento');
+                let ndocumento = button.getAttribute('data-ndocumento');
+                let rol = button.getAttribute('data-rol');
+                let cargo = button.getAttribute('data-cargo');
+                let contraseña = button.getAttribute('data-contraseña');
+                let fechaentrada = button.getAttribute('data-fechaentrada');
+
+                let trabajadorId = button.getAttribute('data-id');
+
+                let modalNombres = editarDatosModal.querySelector('#nombres');
+                let modalApellidos = editarDatosModal.querySelector('#apellidos');
+                let modalCorreo = editarDatosModal.querySelector('#correoElectronico');
+                let modalTelefono = editarDatosModal.querySelector('#telefono');
+                let modalTipodocumento = editarDatosModal.querySelector('#tipoDocumento');
+                let modalNdocumento = editarDatosModal.querySelector('#ndocumento');
+                let modalRol = editarDatosModal.querySelector('#rol');
+                let modalCargo = editarDatosModal.querySelector('#cargo');
+                let modalContraseña = editarDatosModal.querySelector('#contraseña');
+                let modalFechaEntrada = editarDatosModal.querySelector('#fechaentrada');
+
+                modalNombres.value = nombres;
+                modalApellidos.value = apellidos;
+                modalCorreo.value = correo;
+                modalTelefono.value = telefono;
+                modalTipodocumento.value = tipodocumento;
+                modalNdocumento.value = ndocumento;
+                modalRol.value = rol;
+                modalCargo.value = cargo;
+                modalContraseña.value = contraseña;
+                modalFechaEntrada.value = fechaentrada;
+
+                editarDatosModal.setAttribute('data-id', trabajadorId);
+            });
+
+            function actualizarTrabajador() {
+                // Obtenemos los datos del modal
+                const nombres = document.getElementById('nombres').value;
+                const apellidos = document.getElementById('apellidos').value;
+                const correo = document.getElementById('correoElectronico').value;
+                const telefono = document.getElementById('telefono').value;
+                const tipodocumento = document.getElementById('tipoDocumento').value;
+                const ndocumento = document.getElementById('ndocumento').value;
+                const rol = document.getElementById('rol').value;
+                const cargo = document.getElementById('cargo').value;
+                const contraseña = document.getElementById('contraseña').value;
+                const fechaentrada = document.getElementById('fechaentrada').value;
+
+
+                
+                const trabajadorId = editarDatosModal.getAttribute('data-id'); // Obtenemos el ID desde el modal
+
+                // Creamos el objeto con los datos actualizados
+                const datosActualizados = {
+                    id: trabajadorId,
+                    nombres: nombres,
+                    apellidos: apellidos,
+                    correo: correo,
+                    telefono: telefono,
+                    tipodocumento: tipodocumento,
+                    ndocumento: ndocumento,
+                    rol: rol,
+                    cargo: cargo,
+                    contraseña: contraseña,
+                    fechaentrada: fechaentrada
+                };
+
+                // Enviar los datos actualizados
+                fetch(`/trabajadores/actualizar`, {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(datosActualizados)
+                })
+                        .then(response => {
+                            if (response.ok) {
+                                // Cerrar el modal
+                                editarDatosModal.hide();
+                                // Refrescar la página
+                                window.location.reload(); 
+                            } else {
+                                console.error('Error al actualizar el trabajador');
+                            }
+                        })
+                        .catch(error => console.error('Error en la solicitud:', error));
+            }
+
+        </script>
+    </body>
+</html>
+

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Epasame-Administrador</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/PrincipalTrabajador.css">
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar"
+                            aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <li class="nav-item dropdown d-flex">
+                    <ion-icon name="person-circle-sharp"></ion-icon>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Trabajador
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/">Cerrar sesión</a></li>
+                    </ul>
+                    </li>
+                </div>
+            </nav>
+        </header>
+
+        <!--Barra Lateral-->
+        <div class="collapse show " id="sidebar">
+            <div class="Barralateral">
+                <div class="LogoEpasame">
+                    <img src="/image/epasamelogo.png" alt="Epasame Logo" class="img-fluid">
+                </div>
+                <ul class="list-group mt-3">
+                    <li class="list-group-item" style="background: #7a7ab8;"><ion-icon name="calendar-outline"></ion-icon><a href="#">Asistencia</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="clipboard-outline"></ion-icon><a href="/PermisosTrabajador">Permisos</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="settings-outline"></ion-icon><a href="">Configuración</a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <main>
+
+            <div class="container mt-3">
+                <h2 class="mb-5">Registrar Salida o Ingreso</h2>
+                <form action="/registrarAsistencia" method="post" id="Register-form">
+
+                    <div class="row mt-3">
+
+                        <h1 id="fechaD"></h1>
+
+                        <div class="mensaje col-md-4">
+                            <!--Mensajes de alerta-->
+                            <div th:if="${param.erroringreso}" class="alert alert-danger" role="alert">
+                                ¡Ya registro su asistencia del dia!
+                            </div>
+
+                            <div th:if="${param.errorsalida}" class="alert alert-danger" role="alert">
+                                ¡Ya registro su salida del dia!
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
+                            <div class="tipo">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="radio" name="tipo" value="Ingreso" id="flexRadioDefault1" required>
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Ingreso
+                                    </label>
+                                </div>
+                                <div class="form-check mt-4 ms-5">
+                                    <input class="form-check-input" type="radio" name="tipo" value="Salida" id="flexRadioDefault2" required>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Salida
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="btn-enviar mt-4">
+                            <button type="submit" class="btn">Registrar</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // busaca las alertas en el documento
+                const alertError = document.querySelector(".alert-danger");
+
+                // duncion para poder ocultar la alerta en 3 segundos 
+                function hideAlert(alert) {
+                    if (alert) {
+                        setTimeout(() => {
+                            alert.style.display = "none";
+                        }, 3000); // 3segundos
+                    }
+                }
+
+                //llamado de la funcion
+  
+                hideAlert(alertError);
+
+                /*Quitar los parámetros de la URL después de mostrar la alerta
+                 para evitar que al recargarse la pagina se muestre la alerta otra vez*/
+                if (window.history.replaceState) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('erroringreso');
+                    url.searchParams.delete('errorsalida');
+                    window.history.replaceState({path: url.href}, '', url.href);
+                }
+            });
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" 
+                integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" 
+        crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" 
+                integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" 
+        crossorigin="anonymous"></script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+        <!--Script de la fecha local dinamica-->
+        <script>
+            setInterval(() => {
+                let fecha = new Date();
+                let fechahora = fecha.toLocaleString();
+                document.getElementById("fechaD").textContent = fechahora;
+            }, 1000)
+        </script>
+
+    </body>
+</html>
