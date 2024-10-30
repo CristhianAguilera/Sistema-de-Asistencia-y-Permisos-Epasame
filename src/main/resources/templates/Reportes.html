@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Epasame E.I.R.L</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/Reportes.css">
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar"
+                            aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <li class="nav-item dropdown d-flex">
+                    <ion-icon name="person-circle-sharp"></ion-icon>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Administrador
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/">Cerrar sesión</a></li>
+                    </ul>
+                    </li>
+                </div>
+            </nav>
+        </header>
+
+        <!--Barra Lateral-->
+        <div class="collapse show" id="sidebar">
+            <div class="Barralateral">
+                <div class="LogoEpasame">
+                    <img src="/image/epasamelogo.png" alt="Epasame Logo" class="img-fluid">
+                </div>
+                <ul class="list-group mt-3">
+                    <li class="list-group-item"><ion-icon name="person-add-outline"></ion-icon><a
+                        href="/PrincipalAdmin">Registrar</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="people-outline"></ion-icon><a
+                        href="EmpleadosAdmin">Empleados</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="calendar-outline"></ion-icon><a
+                        href="/AsistenciasAdmin">Asistencia</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="clipboard-outline"></ion-icon><a
+                        href="/PermisosAdmin">Permisos</a>
+                    </li>
+                    <li class="list-group-item"  style="background: #7a7ab8;"><ion-icon name="reader-outline"></ion-icon><a href="/Reportes">Reporte</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="settings-outline"></ion-icon><a href="#">Configuración</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Principal -->
+        <main>
+            <div class="container mt-3">
+                <h2>Reporte de Asistencia</h2>
+                <div class="filtros-container mt-4">
+                    <div class="input-group">
+                        <span class="input-group-text">Desde</span>
+                        <input type="date" class="form-control select-date">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Hasta</span>
+                        <input type="date" class="form-control select-date">
+                    </div>
+                    <div class="input-group">
+                        <button class="btn aplicar" type="button" id="buscarFechas">Filtrar</button>
+                    </div>
+
+
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <ion-icon name="search-outline"></ion-icon>
+                        </span>
+                        <input type="text" id="buscarEmpleado" class="form-control buscador"
+                               placeholder="Buscar empleado...">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped mt-4">
+                        <thead>
+                            <tr>
+                                <th scope="col">Trabajador</th>
+                                <th scope="col">Cargo</th>
+                                <th scope="col">Asistió</th>
+                                <th scope="col">No Asistió</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- iteraramos sobre los trabajadores para mostrar sus datos-->
+                            <tr th:each="asistencia: ${asistencias}">
+                                <td th:text="${asistencia.trabajador.nombres}"></td>
+                                <td th:text="${asistencia.trabajador.cargo}"></td>
+                                <td class="fila-b">
+                                    <button type="button" class="btn btn-outline-dark">PRES</button>
+                                </td>
+                                <td class="fila-b">
+                                    <button type="button" class="btn btn-outline-dark">NOPR</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn print"><ion-icon name="print-outline"></ion-icon> Imprimir</button>
+                    <div class="pagination">
+                        <a href="#" class="btn pag"><ion-icon name="arrow-back-outline"></ion-icon>Anterior</a>
+                        <span class="btn mx-2">1</span>
+                        <a href="#" class="btn pag">Siguiente<ion-icon name="arrow-forward-outline"></ion-icon></a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    </body>
+
+</html>

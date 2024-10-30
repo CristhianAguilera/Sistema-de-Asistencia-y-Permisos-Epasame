@@ -126,7 +126,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                         </div>
                         <div class="modal-body">
-                            <form th:action="@{/actualizartrabajador}" method="post" enctype="multipart/form-data" id="Register-form">
+                            <form >
                                 <div class="row mb-3">
                                     <div class="col-md-4">
                                         <label for="nombres" class="form-label">Nombres (*)</label>
@@ -196,7 +196,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </div>
                                 <div class="mt-2 modal-footer d-flex justify-content-center">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="submit" class="btn btn-dark">Guardar</button>
+                                    <button type="button" class="btn btn-dark" onclick="actualizarTrabajador()">Guardar</button>
                                 </div>
                             </form>
                         </div>

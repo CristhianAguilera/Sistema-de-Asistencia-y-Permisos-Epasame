@@ -9,6 +9,7 @@ import com.utp.epasamemvc.model.Trabajador;
 import com.utp.epasamemvc.service.PermisoService;
 import com.utp.epasamemvc.service.TrabajadorService;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.HashMap;
@@ -29,19 +30,45 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
+ * Controlador que gestiona las solicitudes de permisos de los trabajadores.
+ * Permite listar trabajadores activos, registrar permisos, mostrar detalles de
+ * permisos pendientes, y aceptar o rechazar solicitudes de permisos.
  *
- * @author ADVANCE
+ * <p>
+ * El controlador proporciona redirección y gestión de errores en caso de que no
+ * se encuentren registros o existan problemas en el proceso de registro o
+ * actualización de datos.</p>
+ *
+ * <p>
+ * Incluye operaciones relacionadas con la sesión y manipulación de archivos de
+ * evidencia en permisos.</p>
+ *
+ * @author Cristhian Aguilera
  */
 @Controller
 public class PermisosAController {
 
+    /**
+     * Crea una nueva instancia del controlador de permisos.
+     */
+    public PermisosAController() {
+    }
+
+    
+    
     @Autowired
     private TrabajadorService trabajadorservice;
 
     @Autowired
     private PermisoService permisoservice;
 
-    //Carga todos los trabajadores que tengan su estado en activo
+    /**
+     * Carga la lista de trabajadores activos para su visualización en la vista
+     * de administración de permisos.
+     *
+     * @param model Modelo para almacenar y transportar datos a la vista.
+     * @return La vista "PermisosAdmin" con la lista de trabajadores activos.
+     */
     @GetMapping("/PermisosAdmin")
     public String TrabajadoresActivos(Model model) {
         List<Trabajador> trabajadoresList = trabajadorservice.findByEstado("Activo");
@@ -49,13 +76,32 @@ public class PermisosAController {
         return "PermisosAdmin";
     }
 
-    //permite el ingreso a la vista de PermisosTrabajador
+    /**
+     * Carga la vista para que el trabajador pueda ver y solicitar permisos.
+     *
+     * @return La vista "PermisosTrabajador".
+     */
     @GetMapping("/PermisosTrabajador")
-    public String PermisosTrabajador() {
+    public String MuestaVistaPermisosTrabajador() {
         return "PermisosTrabajador";
     }
 
-    //registrar un permiso
+    /**
+     * Registra una nueva solicitud de permiso para el trabajador autenticado.
+     * Incluye verificación de permisos pendientes y almacenamiento de
+     * evidencia.
+     *
+     * @param correo El correo del trabajador que solicita el permiso.
+     * @param fechaInicio Fecha de inicio del permiso.
+     * @param fechaFin Fecha de finalización del permiso.
+     * @param nDocumento Número de documento del trabajador.
+     * @param tipo Tipo de permiso solicitado.
+     * @param descripcion Descripción de la razón del permiso.
+     * @param evidencia Archivo de evidencia (si aplica).
+     * @param session Sesión HTTP para obtener el trabajador autenticado.
+     * @return Redirección a la vista "PermisosTrabajador" con parámetros de
+     * éxito o error.
+     */
     @PostMapping("/registerpermiso")
     public String registrarPermiso(
             @RequestParam("Correo") String correo,//Obtenemos los parametros a utilizar
@@ -102,15 +148,21 @@ public class PermisosAController {
                 trabajador.setTieneSolicitud(true);
                 trabajadorservice.saveTrabajador(trabajador);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            //e.printStackTrace();
 
         }
 
         return "redirect:/PermisosTrabajador?success=true";
     }
 
-    //Mostramos los datos del permiso segun el trabajdor
+    /**
+     * Muestra los detalles de un permiso pendiente de un trabajador específico.
+     *
+     * @param trabajadorId ID del trabajador cuyo permiso se desea ver.
+     * @return Los datos del permiso en formato JSON si se encuentra y está
+     * pendiente, o un error 404 si no se encuentra o no está pendiente.
+     */
     @GetMapping("/permisosAdmin/{trabajadorId}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getPermisoByTrabajadorId(@PathVariable Integer trabajadorId) {
@@ -141,7 +193,14 @@ public class PermisosAController {
         }
     }
 
-    //nos permitira rechazar o aceptar un permiso
+    /**
+     * Acepta o rechaza un permiso específico, actualizando el estado del
+     * permiso y el trabajador.
+     *
+     * @param permisoId ID del permiso a actualizar.
+     * @param accion Acción a realizar (Aceptar o Rechazar).
+     * @return Redirección a la vista "PermisosAdmin".
+     */
     @PostMapping("/AceptarRechazarPermiso")
     public String AceptarRechazarPermiso(
             @RequestParam("permisoId") Integer permisoId,//recojemos parametros
@@ -155,6 +214,7 @@ public class PermisosAController {
                 // si lo encuentra actualiza el estado del permiso segun la accion 
                 if ("Aceptar".equalsIgnoreCase(accion)) {
                     permiso.setEstado("Aceptado");
+                    permiso.setFechaaprobado(LocalDate.now());
                 } else if ("Rechazar".equalsIgnoreCase(accion)) {
                     permiso.setEstado("Rechazado");
                 }
@@ -168,7 +228,7 @@ public class PermisosAController {
                 trabajadorservice.saveTrabajador(trabajador);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return "redirect:/PermisosAdmin";

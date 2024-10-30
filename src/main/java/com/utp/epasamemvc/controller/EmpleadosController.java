@@ -27,31 +27,71 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
+ * Controlador que gestiona el registro, consulta y actualización de los
+ * empleados. Proporciona rutas para acceder a la vista de administración,
+ * registrar empleados, obtener datos de un trabajador específico y actualizar
+ * la información de un trabajador.
  *
- * @author ADVANCE
+ * <p>
+ * Incluye validaciones para evitar duplicidad de datos y manejo de excepciones
+ * para garantizar una respuesta adecuada en caso de errores.</p>
+ *
+ * @author Cristhian Aguilera
  */
 @Controller
 public class EmpleadosController {
 
-    @Autowired
-    private TrabajadorService trabajadorservice;
+    /**
+     * Crea una nueva instancia del controlador de permisos
+     */
+    public EmpleadosController() {
+    }
+    
     
 
-    //Cargamos a todos los empleados en la vista EmpleadosAdmin
+    @Autowired
+    private TrabajadorService trabajadorservice;
+
+    /**
+     * Carga todos los empleados en la vista de administración de empleados.
+     *
+     * @param model El modelo utilizado para pasar datos a la vista.
+     * @return La vista "EmpleadosAdmin" con la lista de trabajadores.
+     */
     @GetMapping("/EmpleadosAdmin")
-    public String home(Model model) {
+    public String CargaEmpleados(Model model) {
         List<Trabajador> trabajadoresList = trabajadorservice.getAllTrabajadores();
         model.addAttribute("trabajadores", trabajadoresList);
         return "EmpleadosAdmin";
     }
 
-    //Permitimos el acceso ala vista PrincipalAdmin
+    /**
+     * Permite el acceso a la vista principal del administrador.
+     *
+     * @return La vista "PrincipalAdmin".
+     */
     @GetMapping("/PrincipalAdmin")
-    public String iniciarSesion() {
+    public String MuestraVistaPrincipalAdmin() {
         return "PrincipalAdmin";
     }
 
-    //Registramos un nuevo trabajador
+    /**
+     * Registra un nuevo trabajador en el sistema, verificando que no haya datos
+     * duplicados.
+     *
+     * @param nombres Nombres del trabajador.
+     * @param apellidos Apellidos del trabajador.
+     * @param correo Correo electrónico del trabajador.
+     * @param telefono Número de teléfono del trabajador.
+     * @param numeroDocumento Número de documento del trabajador.
+     * @param FechaEntrada Fecha de entrada del trabajador.
+     * @param contrasena Contraseña del trabajador.
+     * @param cargo Cargo del trabajador.
+     * @param tipoDocumento Tipo de documento del trabajador.
+     * @param rol Rol asignado al trabajador.
+     * @return Redirección a la vista "PrincipalAdmin" con un mensaje de éxito o
+     * error.
+     */
     @PostMapping("/registertrabajador")
     public String registratrabajador(
             @RequestParam("Nombres") String nombres,//Recibimos los parametros a registrar
@@ -120,6 +160,12 @@ public class EmpleadosController {
 
     }
 
+    /**
+     * Obtiene los datos de un trabajador específico por su ID.
+     *
+     * @param id ID del trabajador a consultar.
+     * @return Respuesta con los datos del trabajador o un estado 404 si no se encuentra.
+     */
     @GetMapping("/getTrabajador/{id}")
     @ResponseBody
     public ResponseEntity<Trabajador> getTrabajador(@PathVariable Long id) {
@@ -128,11 +174,17 @@ public class EmpleadosController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Actualiza la información de un trabajador en el sistema.
+     *
+     * @param trabajador Objeto Trabajador con la información actualizada.
+     * @return Respuesta con un mensaje de éxito, error de validación o error interno.
+     */
     @PostMapping("/trabajadores/actualizar")
     @ResponseBody
     public ResponseEntity<String> updateTrabajador(@RequestBody Trabajador trabajador) {
         try {
-            
+
             if (trabajador.getId() == null) {
                 return ResponseEntity.badRequest().body("El ID del trabajador es requerido.");
             }
@@ -145,5 +197,5 @@ public class EmpleadosController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el trabajador: " + e.getMessage());
         }
     }
-  
+
 }

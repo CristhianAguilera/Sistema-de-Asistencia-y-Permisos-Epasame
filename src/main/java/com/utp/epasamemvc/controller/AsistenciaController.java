@@ -19,30 +19,65 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
+ * Controlador para gestionar la asistencia de los trabajadores en la
+ * aplicación. Proporciona rutas para registrar asistencias y visualizar el
+ * historial de asistencias.
  *
- * @author ADVANCE
+ * <p>
+ * Incluye métodos para mostrar la página principal de trabajadores, cargar las
+ * asistencias en la vista de administración, y registrar el ingreso o salida de
+ * los trabajadores.</p>
+ *
+ * @author Cristhian Aguilera
  */
 @Controller
 public class AsistenciaController {
 
+    /**
+     * Crea una nueva instancia del controlador de asistencias.
+     */
+    public AsistenciaController() {
+    }
+
     @Autowired
     private AsistenciaService asistenciaService;
 
-    //Permite mostrar la vista de PrincipalTrabajdor
+    /**
+     * Muestra la vista principal para el trabajador.
+     *
+     * @return La vista "PrincipalTrabajador".
+     */
     @GetMapping("/PrincipalTrabajador")
-    public String iniciarSesion() {
+    public String MuestraVistaPrincipalTrabajador() {
         return "PrincipalTrabajador";
     }
 
-    //Carga todas las asistencias en la vista AsistenciasAdmin
+    /**
+     * Carga todas las asistencias en la vista de administración para el
+     * administrador.
+     *
+     * @param model El modelo utilizado para pasar datos a la vista.
+     * @return La vista "AsistenciasAdmin" con la lista de asistencias.
+     */
     @GetMapping("/AsistenciasAdmin")
-    public String iniciarSesion1(Model model) {
+    public String CargaAsistencia(Model model) {
         List<Asistencia> asistencias = asistenciaService.obtenerTodasLasAsistencias();
         model.addAttribute("asistencias", asistencias);
         return "AsistenciasAdmin";
     }
 
-    //Regsitra una nueva asistencia
+    /**
+     * Registra una nueva asistencia para un trabajador, ya sea como ingreso o
+     * salida. Valida si el trabajador ya registró su ingreso o salida en el día
+     * actual, evitando duplicados.
+     *
+     * @param tipo Tipo de asistencia ("Ingreso" o "Salida") para identificar el
+     * tipo de registro.
+     * @param session La sesión HTTP donde se almacena el trabajador
+     * autenticado.
+     * @return Redirección a la vista "PrincipalTrabajador" con mensajes de
+     * error si ya hay un registro para ese tipo.
+     */
     @PostMapping("/registrarAsistencia")
     public String registrarAsistencia(
             @RequestParam("tipo") String tipo, // Detecta si el valor es Ingreso o Salida
@@ -51,8 +86,6 @@ public class AsistenciaController {
         Trabajador trabajador = (Trabajador) session.getAttribute("trabajador");
         //obtenemos la asistencia del dia con el trabajador
         Asistencia asistencia = asistenciaService.obtenerAsistenciaDelDia(trabajador.getId());
-        
-        
 
         //verifica el tipo 
         if (tipo.equals("Ingreso")) {
@@ -86,4 +119,19 @@ public class AsistenciaController {
         asistenciaService.saveAsistencia(asistencia);
         return "redirect:/PrincipalTrabajador";
     }
+
+    /**
+     * Carga todas las asistencias en la vista de Reportes para el
+     * administrador.
+     *
+     * @param model El modelo utilizado para pasar datos a la vista.
+     * @return La vista "Reportes" con la lista de asistencias.
+     */
+    @GetMapping("/Reportes")
+    public String MuestraVistaReportes(Model model) {
+        List<Asistencia> asistencias = asistenciaService.obtenerTodasLasAsistencias();
+        model.addAttribute("asistencias", asistencias);
+        return "Reportes";
+    }
+    
 }

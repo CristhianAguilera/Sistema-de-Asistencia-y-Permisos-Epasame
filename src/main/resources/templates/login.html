@@ -22,11 +22,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <form th:action="@{/login}" id="login-form" method="post">
                     <h3 class="mb-3">INICIAR SESIÓN</h3>
                     <div class="icon-person mb-3"><img src="/image/perfil.png" alt=""></div>
-                    
+
                     <div th:if="${param.error}" class="alert alert-danger" role="alert" >
                         Credenciales incorrectas
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="correoelectronico" class="form-label">Correo Electronico</label>
                         <input type="email" class="form-control" name="correoelectronico" id="correoelectronico"
@@ -43,6 +43,36 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 </form>
             </div>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // busaca las alertas en el documento
+
+                const alertError = document.querySelector(".alert-danger");
+
+                // duncion para poder ocultar la alerta en 3 segundos
+                function hideAlert(alert) {
+                    if (alert) {
+                        setTimeout(() => {
+                            alert.style.display = "none";
+                        }, 3000); // 3segundos
+                    }
+                }
+
+                //llamado de la funcion
+
+                hideAlert(alertError);
+
+                /*Quitar los parámetros de la URL después de mostrar la alerta
+                 para evitar que al recargarse la pagina se muestre la alerta otra vez*/
+                if (window.history.replaceState) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('error');
+                    window.history.replaceState({path: url.href}, '', url.href);
+                }
+            });
+        </script>
+        
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" 
                 integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" 
         crossorigin="anonymous"></script>
