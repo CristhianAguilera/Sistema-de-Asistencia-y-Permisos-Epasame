@@ -32,8 +32,6 @@ public class TrabajadorService {
      */
     public TrabajadorService() {
     }
-    
-    
 
     @Autowired
     private TrabajadorRepository trabajadorrepository;
@@ -50,36 +48,6 @@ public class TrabajadorService {
     }
 
     /**
-     * Actualiza los detalles de un trabajador existente.
-     *
-     * @param id el ID del trabajador a actualizar
-     * @param trabajadorDetails los nuevos detalles del trabajador
-     * @return el trabajador actualizado
-     * @throws EntityNotFoundException si no se encuentra un trabajador con el
-     * ID proporcionado
-     */
-    @Transactional
-    public Trabajador updateTrabajador(long id, Trabajador trabajadorDetails) {
-        Trabajador trabajador = trabajadorrepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Trabajador no encontrado con el ID: " + id));
-
-        trabajador.setNombres(trabajadorDetails.getNombres());
-        trabajador.setApellidos(trabajadorDetails.getApellidos());
-        trabajador.setTelefono(trabajadorDetails.getTelefono());
-        trabajador.setCorreo(trabajadorDetails.getCorreo());
-        trabajador.setCargo(trabajadorDetails.getCargo());
-        trabajador.setRol(trabajadorDetails.getRol());
-        trabajador.setTipodocumento(trabajadorDetails.getTipodocumento());
-        trabajador.setNdocumento(trabajadorDetails.getNdocumento());
-        trabajador.setTelefono(trabajadorDetails.getTelefono());
-        trabajador.setCorreo(trabajadorDetails.getCorreo());
-        trabajador.setContraseña(trabajadorDetails.getContraseña());
-        trabajador.setFechaentrada(trabajadorDetails.getFechaentrada());
-
-        return trabajadorrepository.save(trabajador);
-    }
-
-    /**
      * Obtiene una lista de trabajadores según su estado.
      *
      * @param estado el estado de los trabajadores que se desean obtener
@@ -87,6 +55,16 @@ public class TrabajadorService {
      */
     public List<Trabajador> findByEstado(String estado) {
         return trabajadorrepository.findByEstado(estado);
+    }
+
+    /**
+     * Obtiene una lista de trabajadores según su rol.
+     *
+     * @param rol el rol de los trabajadores que se desean obtener
+     * @return una lista de trabajadores con el rol especificado
+     */
+    public List<Trabajador> findByRol(String rol) {
+        return trabajadorrepository.findByRol(rol);
     }
 
     /**
@@ -159,13 +137,28 @@ public class TrabajadorService {
     public List<Trabajador> getAllTrabajadores() {
         return trabajadorrepository.findAll();
     }
-    
-    /*@Transactional
-    public void deleteTrabajador(Long id) {
-        Trabajador trabajador = trabajadorrepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Trabajador no encontrado con el ID: " + id));
 
-        trabajadorrepository.delete(trabajador);
-    }*/
+    /**
+     * Obtiene una página de trabajadores filtrados por su rol.
+     *
+     * @param rol El rol de los trabajadores a filtrar.
+     * @param pageable Los parámetros de paginación.
+     * @return Una página de trabajadores con el rol especificado.
+     */
+    public Page<Trabajador> findByRolPage(String rol, Pageable pageable) {
+        return trabajadorrepository.findByRol(rol, pageable);
+    }
+
+    /**
+     * Obtiene una página de trabajadores filtrados por su estado.
+     *
+     * @param estado El estado de los trabajadores a filtrar (por ejemplo:
+     * "activo", "inactivo").
+     * @param pageable Los parámetros de paginación.
+     * @return Una página de trabajadores con el estado especificado.
+     */
+    public Page<Trabajador> findByEstadoPage(String estado, Pageable pageable) {
+        return trabajadorrepository.findByEstado(estado, pageable);
+    }
 
 }

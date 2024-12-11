@@ -6,6 +6,7 @@ package com.utp.epasamemvc.model;
 
 import jakarta.persistence.*;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,8 +28,6 @@ public class Trabajador {
      */
     public Trabajador() {
     }
-    
-    
 
     /**
      * Identificador único del trabajador.
@@ -53,12 +52,12 @@ public class Trabajador {
     private String cargo;
 
     /**
-     * Rol del trabajador ("Administrador", "Empleado").
+     * Rol del trabajador, como "Administrador" o "Empleado".
      */
     private String rol;
 
     /**
-     * Estado del trabajador ("Activo" o "Inactivo").
+     * Estado actual del trabajador, como "Activo" o "Inactivo".
      */
     private String estado;
 
@@ -73,7 +72,7 @@ public class Trabajador {
     private String ndocumento;
 
     /**
-     * Número de teléfono del trabajador.
+     * Número de teléfono de contacto del trabajador.
      */
     private String telefono;
 
@@ -83,22 +82,22 @@ public class Trabajador {
     private String correo;
 
     /**
-     * Contraseña del trabajador.
+     * Contraseña del trabajador para autenticación.
      */
     private String contraseña;
 
     /**
-     * Fecha de entrada del trabajador a la empresa.
+     * Fecha de ingreso del trabajador a la empresa.
      */
     private Date fechaentrada;
 
     /**
-     * Días de permiso disponibles para el trabajador.
+     * Número de días de permiso disponibles para el trabajador.
      */
     private int diaspermiso;
 
     /**
-     * Estado diario del trabajador ("Presente", "Ausente", "Vacaciones").
+     * Estado diario del trabajador, como "Presente", "Ausente" o "Vacaciones".
      */
     private String estadodiario;
 
@@ -108,16 +107,32 @@ public class Trabajador {
     private boolean tieneSolicitud;
 
     /**
-     * Lista de asistencias registradas para el trabajador.
+     * Indica si el trabajador tiene una justificación pendiente.
+     */
+    private boolean tienejustificacion;
+
+    /**
+     * Fecha y hora de creación del registro del trabajador.
+     */
+    private LocalDateTime createdAt;
+
+    /**
+     * Lista de asistencias registradas asociadas al trabajador.
      */
     @OneToMany(mappedBy = "trabajador")
     private List<Asistencia> asistencias;
 
     /**
-     * Lista de permisos asociados al trabajador.
+     * Lista de permisos asignados al trabajador.
      */
     @OneToMany(mappedBy = "trabajador")
     private List<Permiso> permisos;
+
+    /**
+     * Lista de justificaciones relacionadas con el trabajador.
+     */
+    @OneToMany(mappedBy = "trabajador")
+    private List<Justificacion> justificaciones;
 
     /**
      * Obtiene el ID del trabajador.
@@ -424,6 +439,74 @@ public class Trabajador {
      */
     public void setTieneSolicitud(boolean tieneSolicitud) {
         this.tieneSolicitud = tieneSolicitud;
+    }
+
+    /**
+     * Indica si el trabajador tiene una justificación asociada. Este método
+     * devuelve un valor booleano que indica si el trabajador tiene alguna
+     * justificación registrada en el sistema.
+     *
+     * @return true si el trabajador tiene una justificación, false en caso
+     * contrario
+     */
+    public boolean isTienejustificacion() {
+        return tienejustificacion;
+    }
+
+    /**
+     * Obtiene la fecha y hora en la que fue creado el registro. Este método
+     * devuelve la fecha y hora de creación del registro de justificación o
+     * asistencia.
+     *
+     * @return la fecha y hora de creación del registro
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * Establece la fecha y hora en la que fue creado el registro. Este método
+     * permite asignar la fecha y hora en la que se registró la justificación o
+     * asistencia en el sistema.
+     *
+     * @param createdAt la fecha y hora de creación del registro
+     */
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * Establece si el trabajador tiene una justificación asociada. Este método
+     * asigna un valor booleano que indica si el trabajador tiene alguna
+     * justificación registrada en el sistema.
+     *
+     * @param tienejustificacion valor booleano que indica si el trabajador
+     * tiene justificación
+     */
+    public void setTienejustificacion(boolean tienejustificacion) {
+        this.tienejustificacion = tienejustificacion;
+    }
+
+    /**
+     * Obtiene la lista de justificaciones asociadas al trabajador. Este método
+     * devuelve una lista de objetos de tipo Justificación que están asociadas a
+     * un trabajador.
+     *
+     * @return la lista de justificaciones del trabajador
+     */
+    public List<Justificacion> getJustificaciones() {
+        return justificaciones;
+    }
+
+    /**
+     * Establece la lista de justificaciones asociadas al trabajador. Este
+     * método permite asignar una lista de objetos Justificación a un
+     * trabajador.
+     *
+     * @param justificaciones la lista de justificaciones del trabajador
+     */
+    public void setJustificaciones(List<Justificacion> justificaciones) {
+        this.justificaciones = justificaciones;
     }
 
 }

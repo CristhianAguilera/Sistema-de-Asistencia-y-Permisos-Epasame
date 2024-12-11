@@ -28,10 +28,40 @@ header nav .nav-item {
     height: 100%;
     background: #64657b;
     display: flex;
+    overflow-y: auto;
     flex-direction: column;
     z-index: 2;
+    top:0;
 
 }
+
+/* Estilo general para la barra de desplazamiento */
+.Barralateral::-webkit-scrollbar {
+    width: 10px; /* Ancho del scroll */
+}
+
+.Barralateral::-webkit-scrollbar-track {
+    background: #f4f4f4; /* Color del fondo de la barra de scroll */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.Barralateral::-webkit-scrollbar-thumb {
+    background: #7a7ab8; /* Color de la barra de scroll */
+    border-radius: 10px; /* Bordes redondeados */
+    border: 2px solid #f4f4f4; /* Borde para separar el thumb del track */
+}
+
+.Barralateral::-webkit-scrollbar-thumb:hover {
+    background: #5a5a88; /* Color al pasar el cursor sobre la barra */
+}
+
+/* Compatibilidad para otros navegadores con scrollbar "modernos" */
+.Barralateral {
+    scrollbar-color: #7a7ab8 #f4f4f4; /* thumb (barra) y track (fondo) */
+    scrollbar-width: thin; /* Scroll más delgado */
+}
+
+
 
 .Barralateral .LogoEpasame {
 
@@ -39,6 +69,7 @@ header nav .nav-item {
     width: 180px;
     height: 100px;
     margin-left: 15px;
+    cursor:pointer;
 
 }
 
@@ -158,23 +189,37 @@ h2 {
     box-shadow: none;
 }
 
-.mensaje{
+/*.mensaje{
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Coloca el h2 a la izquierda y el alert a la derecha */
+    justify-content: space-between;
     padding: 10px;
 }
 
 .mensaje h2 {
-    margin: 0; /* Remueve márgenes adicionales */
+    margin: 0;
     text-align: center;
-}
+}*/
 
 .alert {
     margin: 0;
     padding: 5px 10px; /* Ajusta el espacio interior si es necesario */
     font-size: 8px; /* Ajusta el tamaño de fuente */
 }
+
+.dropdown-container {
+    display: none;
+    flex-direction: column;
+
+}
+
+.dropdown-container .list-group-item {
+    display: block;
+    width: 100%;
+    margin-left: 20px;
+}
+
+
 
 
 @media (max-width: 1100px) {

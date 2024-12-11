@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <div class="collapse show " id="sidebar" th:fragment="menuTrabajador">
+            <div class="Barralateral">
+                <div class="LogoEpasame">
+                    <a class="Imag">
+                        <img src="/image/epasamelogo.png" alt="Epasame Logo" class="img-fluid">
+                    </a>
+                </div>
+                <ul class="list-group mt-3">
+                    <button class="list-group-item dropdown-btn3">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        <a href="#">Asistencia</a>
+                    </button>
+                    <div class="dropdown-container">
+                        <li class="list-group-item">
+                        <ion-icon name="reader-outline"></ion-icon>
+                        <a href="/PrincipalTrabajador">Registrar</a>
+                        </li>
+
+                        <li class="list-group-item">
+                        <ion-icon name="file-tray-full-outline"></ion-icon>
+                        <a href="/VerAsistenciasTrabajador">Ver Asistencias</a>
+                        </li>
+                    </div>
+
+                    <button class="list-group-item dropdown-btn">
+                        <ion-icon name="clipboard-outline"></ion-icon>
+                        <a href="#">Permisos</a>
+                    </button>
+                    <div class="dropdown-container">
+                        <li class="list-group-item">
+                        <ion-icon name="reader-outline"></ion-icon>
+                        <a href="/PermisosTrabajador">Solicitar</a>
+                        </li>
+
+                        <li class="list-group-item">
+                        <ion-icon name="file-tray-full-outline"></ion-icon>
+                        <a href="/VerPermisosTrabajador">Ver Permisos</a>
+                        </li>
+                    </div>
+
+                    <button class="list-group-item dropdown-btn2">
+                        <ion-icon name="receipt-outline"></ion-icon>
+                        <a href="#">Justificaciones</a>
+                    </button>
+                    <div class="dropdown-container">
+                        <li class="list-group-item" >
+                        <ion-icon name="reader-outline"></ion-icon>
+                        <a href="/JustificacionesTrabajador">Solicitar</a>
+                        </li>
+
+                        <li class="list-group-item">
+                        <ion-icon name="file-tray-full-outline"></ion-icon>
+                        <a href="/VerJustificacionesTrabajador">Ver Justificacion</a>
+                        </li>
+                    </div>
+                    
+                    <li class="list-group-item"><ion-icon name="settings-outline"></ion-icon><a href="">Configuración</a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+    </body>
+</html>

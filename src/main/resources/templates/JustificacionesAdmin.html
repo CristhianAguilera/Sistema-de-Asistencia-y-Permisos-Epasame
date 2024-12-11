@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Epasame-Administrador</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+              crossorigin="anonymous">
+
+        <!-- Estilos de PNotify -->
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotify.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/BrightTheme.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="/css/PermisosAdmin.css">
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar"
+                            aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <li class="nav-item dropdown d-flex">
+                    <ion-icon name="person-circle-sharp"></ion-icon>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li>
+                            <form th:action="@{/logout}" method="post" style="display: inline;">
+                                <button type="submit" class="dropdown-item">Cerrar sesión</button>
+                            </form>
+                        </li>
+                    </ul>
+                    </li>
+                </div>
+            </nav>
+        </header>
+
+        <!--Barra Lateral-->
+        <div th:replace="~{fragments/menuAdmin :: menuAdmin}"></div>
+
+        <main>
+            <div class="container mt-4">
+                <div id="miDiv"
+                     th:data-nombres="${trabajador.nombres}"
+                     hidden>
+                </div>
+                <h2>Justificaciones</h2>
+
+                <div th:if="${param.Aceptada}" id="successMessage" data-message="¡Justificación Aceptada" ></div>
+                <div th:if="${param.Rechazada}" id="errorMessage" data-message="¡Justificación Rechazada!" ></div>
+
+                <div class="filtros-container mt-4">
+
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <ion-icon name="search-outline"></ion-icon>
+                        </span>
+                        <input type="text" id="buscarEmpleado" class="form-control buscador"
+                               placeholder="Buscar empleado...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="TablaDatos" class="table table-striped mt-4">
+                        <thead>
+                            <tr>
+                                <th scope="col">Empleado</th>
+                                <th scope="col">Nº de Documento</th>
+                                <th scope="col">Telefono</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Solicitud</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- iteraramos sobre los trabajadores para mostrarlas-->
+                            <tr th:each="trabajador : ${trabajadores}">
+                                <td th:text="${trabajador.nombres + ' ' + trabajador.apellidos}"></td>
+                                <td th:text="${trabajador.ndocumento}"></td>
+                                <td th:text="${trabajador.telefono}"></td>
+                                <td th:text="${trabajador.correo}"></td>
+                                <td>
+                                    <button type="button" class="btn position-relative btn-consulta" 
+                                            th:attr="data-trabajador-id=${trabajador.id}, data-tiene-justificacion=${trabajador.tienejustificacion}">
+                                        <a href="#" style="color: white">Solicitud</a>
+                                        <span th:if="${trabajador.tienejustificacion}" 
+                                              class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                                            <span class="visually-hidden">New alerts</span>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <nav>
+                    <ul class="pagination">
+                        <!-- Botón de página anterior -->
+                        <li class="page-item" th:classappend="${trabajadores.first} ? 'disabled'">
+                            <a class="page-link" th:href="@{/JustificacionesAdmin(page=${trabajadores.number - 1})}">Anterior</a>
+                        </li>
+
+                        <!-- Números de página -->
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, trabajadores.totalPages - 1)}"
+                            th:classappend="${i == trabajadores.number} ? 'active'">
+                            <a class="page-link" th:href="@{/JustificacionesAdmin(page=${i})}" th:text="${i + 1}"></a>
+                        </li>
+
+                        <!-- Botón de página siguiente -->
+                        <li class="page-item" th:classappend="${trabajadores.last} ? 'disabled'">
+                            <a class="page-link" th:href="@{/JustificacionesAdmin(page=${trabajadores.number + 1})}">Siguiente</a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Modal 2-->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <form th:action="@{/AceptarRechazarJustificacion}" method="post" id="formjusti">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Solicitud de Justificacion</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!--mostramos los datos de la justificacion segun el trabajador-->
+                                    <b>Trabajador:</b> <span id="trabajadorNombre" name="trabajadorNombre"></span><br>
+
+                                    <div class="col-sm-4 fecha">
+                                        <b>Fecha:</b> 
+                                        <input readonly type="date" class="form-control select-date" id="fecha" name="fecha" required><br>
+                                    </div>
+
+                                    <b>Asistencia:</b> <span id="asistencia" name="asistencia"></span><br>
+
+                                    <b>Descripción:</b><br> <span id="descripcion" name="descripcion"></span><br>
+
+                                    <b>Evidencia:</b> <a id="evidenciaLink" name="evidenciaLink" href="#" download="evidencia.jpg">Descargar Evidencia</a>
+
+                                    <div class="mt-3">
+                                        <label for="motivo" class="form-label">Comentarios</label>
+                                        <textarea class="form-control" id="motivo" name="motivo" rows="3"></textarea>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <input type="hidden" name="justificacionId" id="justificacionId" value="">
+                                    <!--almacena el valor del boton presionado-->
+                                    <input type="hidden" name="accion2" id="accion2" value="">
+                                    <button type="button" class="btn btn-primary" onclick="setAccion('Aceptar')">Aceptar</button>
+                                    <button type="button" class="btn btn-danger" onclick="setAccion('Rechazar')">Rechazar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+        </main>
+
+        <script>
+            document.getElementById("buscarEmpleado").addEventListener("input", function () {
+                const filtro = this.value.toLowerCase(); // Convierte el texto a minúsculas
+                const filas = document.getElementById("TablaDatos").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+                for (let i = 0; i < filas.length; i++) {
+                    const trabajadorname = filas[i].getElementsByTagName("td")[0].textContent.toLowerCase();
+                    const dni = filas[i].getElementsByTagName("td")[1].textContent.toLowerCase(); // Columna Tipo de Permiso
+                    const telefono = filas[i].getElementsByTagName("td")[2].textContent.toLowerCase(); // Columna Estado
+
+                    // Comprueba si el filtro coincide con alguna de las columnas deseadas
+                    const filaVisible = trabajadorname.includes(filtro) || dni.includes(filtro)
+                            || telefono.includes(filtro);
+
+                    // Muestra u oculta la fila dependiendo de si se encontró coincidencia
+                    filas[i].style.display = filaVisible ? "" : "none";
+                }
+            });
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const successElement = document.getElementById("successMessage");
+                const errorElement = document.getElementById("errorMessage");
+
+                const successMessage = successElement ? successElement.getAttribute("data-message") : null;
+                const errorMessage = errorElement ? errorElement.getAttribute("data-message") : null;
+
+                if (successMessage) {
+                    PNotify.success({
+                        text: successMessage,
+                        delay: 3000
+                    });
+                }
+
+                if (errorMessage) {
+                    PNotify.notice({
+                        text: errorMessage,
+                        delay: 3000
+                    });
+                }
+
+                if (errorMessage || successMessage) {
+                    const url = new URL(window.location);
+                    url.searchParams.delete("errorMessage");
+                    url.searchParams.delete("successMessage");
+                    window.history.replaceState({}, document.title, url.pathname);
+                }
+
+
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+
+                let divDatos = document.getElementById('miDiv');
+                let nombres = divDatos.getAttribute('data-nombres');
+                // Seleccionamos los campos del formulario
+                let nombreTrabajador = document.getElementById('navbarDropdown');
+
+                nombreTrabajador.textContent = nombres;
+            });
+        </script>
+
+        <script>
+            var img = document.getElementsByClassName("Imag")[0];
+            let sidebar = document.getElementById("sidebar");
+
+            img.addEventListener("click", function () {
+
+                sidebar.classList.remove("show");
+            });
+        </script>
+
+        <!--captura el valor del boton presionado y asigna su valor a el elemento con id accion -->
+        <script>
+            function setAccion(estado) {
+                if (estado === "Rechazar") {
+                    // Verifica si el motivo está lleno
+                    let motivo = document.getElementById("motivo").value.trim();
+                    if (!motivo) {
+                        alert("Por favor, completa el campo de comentarios antes de rechazar la solicitud.");
+                        return; // Evita que se envíe el formulario
+                    }
+                }
+
+                if (confirm("¿Estás seguro de que deseas " + estado.toLowerCase() + " esta solicitud?")) {
+                    document.getElementById("accion2").value = estado;
+                    document.getElementById("formjusti").submit();
+                }
+            }
+        </script>
+
+        <!--permite cargar los datos del permiso segun el trabajador-->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+
+                //selecciona al elemento con la clase btn-consulta
+                document.querySelectorAll('.btn-consulta').forEach(button => {
+                    button.addEventListener('click', function () {
+
+                        //obtiene el id del trabajdor
+                        const trabajadorId = button.getAttribute('data-trabajador-id');
+
+                        // Verifica si tiene solicitud
+                        const tieneSolicitud = button.getAttribute('data-tiene-justificacion') === 'true';
+
+                        //si no tiene solicitud lanza un alert
+                        if (!tieneSolicitud) {
+                            alert('Este trabajador no tiene Justificaciones pendientes.');
+                            return;
+                        }
+
+                        // Si tiene solicitud, realiza la petición
+                        fetch(`/JustificacionesAdmin/${trabajadorId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    document.getElementById('trabajadorNombre').textContent = data.trabajadorNombre;
+                                    document.getElementById('fecha').value = data.fecha;
+                                    document.getElementById('asistencia').textContent = data.asistencia;
+                                    document.getElementById('descripcion').textContent = data.descripcion;
+                                    document.getElementById('justificacionId').value = data.justificacionId;
+
+                                    // Configurar el enlace de descarga si hay evidencia
+                                    if (data.evidencia) {
+                                        const evidenciaLink = document.getElementById('evidenciaLink');
+                                        evidenciaLink.href = `data:image/jpeg;base64,${data.evidencia}`;
+                                        evidenciaLink.style.display = 'inline';
+                                    } else {
+                                        document.getElementById('evidenciaLink').style.display = 'none';
+                                    }
+
+                                    modal.show();
+                                })
+                                .catch(error => console.error('Error al cargar los datos:', error));
+                    });
+                });
+            });
+
+        </script>
+
+        <script>
+            // Seleccionar ambos tipos de dropdown buttons
+            var dropdowns = document.querySelectorAll(".dropdown-btn, .dropdown-btn2");
+
+            dropdowns.forEach(function (dropdown) {
+                dropdown.addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === "block") {
+                        dropdownContent.style.display = "none";
+                    } else {
+                        dropdownContent.style.display = "block";
+                    }
+                });
+            });
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" 
+                integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" 
+        crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" 
+                integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" 
+        crossorigin="anonymous"></script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+        <!-- Scripts de PNotify -->
+        <script src="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotify.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotifyButtons.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotifyButtons.css" rel="stylesheet">
+
+    </body>
+</html>
+

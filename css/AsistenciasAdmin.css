@@ -35,8 +35,36 @@ header nav .nav-item {
     height: 100%;
     background: #64657b;
     display: flex;
+    overflow-y: auto;
     flex-direction: column;
     z-index: 2;
+    top: 0;
+}
+
+/* Estilo general para la barra de desplazamiento */
+.Barralateral::-webkit-scrollbar {
+    width: 10px; /* Ancho del scroll */
+}
+
+.Barralateral::-webkit-scrollbar-track {
+    background: #f4f4f4; /* Color del fondo de la barra de scroll */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.Barralateral::-webkit-scrollbar-thumb {
+    background: #7a7ab8; /* Color de la barra de scroll */
+    border-radius: 10px; /* Bordes redondeados */
+    border: 2px solid #f4f4f4; /* Borde para separar el thumb del track */
+}
+
+.Barralateral::-webkit-scrollbar-thumb:hover {
+    background: #5a5a88; /* Color al pasar el cursor sobre la barra */
+}
+
+/* Compatibilidad para otros navegadores con scrollbar "modernos" */
+.Barralateral {
+    scrollbar-color: #7a7ab8 #f4f4f4; /* thumb (barra) y track (fondo) */
+    scrollbar-width: thin; /* Scroll más delgado */
 }
 
 .Barralateral .LogoEpasame {
@@ -44,6 +72,7 @@ header nav .nav-item {
     width: 180px;
     height: 100px;
     margin-left: 15px;
+    cursor: pointer;
 }
 
 .Barralateral .list-group .list-group-item {
@@ -98,11 +127,28 @@ h2 {
     text-align: center;
 }
 
+.dropdown-container {
+    display: none;
+    flex-direction: column;
+
+}
+
+.dropdown-container .list-group-item {
+    display: block;
+    width: 100%;
+    margin-left: 20px;
+}
+
 /* Buscador */
 .filtros-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.filtros-container2 {
+    display: flex;
+    flex-direction: column;
 }
 
 .input-group {
@@ -146,12 +192,23 @@ h2 {
     box-shadow: none;
 }
 
-.btn.aplicar{
+.btn.aplicar {
     padding: 10px;
-    margin-right: 260px;
     border-radius: 15px;
     max-width: 200px;
+    margin-right: 5px;
 }
+
+.btn.limpiar {
+    background-color: #6c757d !important;
+    color: white !important;
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 200px;
+    margin-left: 5px;
+}
+
+
 
 .buscador {
     width: 100%;
@@ -185,19 +242,11 @@ table td {
     color: white;
     border-radius: 10px;
     background-color: var(--color-principal);
-    cursor: pointer;
 }
 
-.btn.regis{
+.btn.print{
     max-width: 200px;
     width: 150px;
-}
-.btn.cancel{
-    max-width: 200px;
-    width: 150px;
-    background-color:#211d1d40;
-    color: black;
-    
 }
 
 .btn ion-icon {
@@ -229,45 +278,7 @@ table td {
 .pagination ion-icon {
     font-size: 15px;
 }
-/*.switch {
-    position: relative;
-    display: inline-block;
-    width: 34px;
-    height: 20px;
-}
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 20px;
-}
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 12px;
-    width: 12px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-}
-input:checked + .slider {
-    background-color: #6a1b9a;
-}
-input:checked + .slider:before {
-    transform: translateX(14px);
-}*/
+
 
 @media (max-width: 1100px) {
     .Barralateral {
@@ -301,7 +312,7 @@ input:checked + .slider:before {
         max-width: 800px;
         margin: 10px 0;
     }
-    
+
     .btn.aplicar {
         width: 100%;
     }

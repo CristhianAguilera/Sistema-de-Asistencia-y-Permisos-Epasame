@@ -7,15 +7,16 @@ package com.utp.epasamemvc.model;
 import jakarta.persistence.*;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * La clase Asistencia representa la asistencia de un trabajador en una fecha
- * específica, registrando la hora de ingreso y salida, así como el estado y
- * cualquier justificación.
+ * específica, registrando la hora de ingreso y salida, así como el estado.
  * <p>
- * Cada asistencia está asociada a un trabajador específico.
+ * Cada asistencia está asociada a un trabajador específico y una justificacion.
  * </p>
  *
  * @author Cristhian Aguilera
@@ -29,8 +30,6 @@ public class Asistencia {
      */
     public Asistencia() {
     }
-    
-    
 
     /**
      * Identificador único de la asistencia.
@@ -60,15 +59,60 @@ public class Asistencia {
     private String estado;
 
     /**
-     * Justificación en caso de que el trabajador no haya cumplido con su
-     * asistencia normal.
+     * La latitud de la ubicación donde el trabajador ingresó. Representa la
+     * coordenada geográfica en la que el trabajador marcó su entrada.
      */
-    private String justificacion;
+    private Double latitudIngreso;
 
     /**
-     * Evidencia asociada con la asistencia, si se proporciona.
+     * La longitud de la ubicación donde el trabajador ingresó. Representa la
+     * coordenada geográfica en la que el trabajador marcó su entrada.
      */
-    private String evidencia;
+    private Double longitudIngreso;
+
+    /**
+     * La latitud de la ubicación donde el trabajador salió. Representa la
+     * coordenada geográfica en la que el trabajador marcó su salida.
+     */
+    private Double latitudSalida;
+
+    /**
+     * La longitud de la ubicación donde el trabajador salió. Representa la
+     * coordenada geográfica en la que el trabajador marcó su salida.
+     */
+    private Double longitudSalida;
+
+    /**
+     * Un enlace a la ubicación de entrada del trabajador. Este enlace puede
+     * mostrar un mapa o la ubicación exacta de ingreso.
+     */
+    private String linkUbicacionIngreso;
+
+    /**
+     * Un enlace a la ubicación de salida del trabajador. Este enlace puede
+     * mostrar un mapa o la ubicación exacta de salida.
+     */
+    private String linkUbicacionSalida;
+
+    /**
+     * Indica si el trabajador se encontraba dentro de las instalaciones al
+     * momento de su ingreso. Si es verdadero, el trabajador marcó su entrada
+     * dentro del local; si es falso, no estaba dentro del local.
+     */
+    private boolean dentroDeLocalIngreso;
+
+    /**
+     * Getter para el atributo `dentroDeLocalIngreso`. Devuelve si el trabajador
+     * estaba dentro del local en el momento de su ingreso.
+     *
+     * @return true si el trabajador estaba dentro del local al ingresar; false
+     * si no.
+     */
+    public boolean isDentroDeLocalIngreso() {
+        return dentroDeLocalIngreso;
+    }
+
+    private LocalDateTime createdAt;
 
     /**
      * Trabajador al que se asocia esta asistencia.
@@ -76,6 +120,12 @@ public class Asistencia {
     @ManyToOne
     @JoinColumn(name = "trabajador_id")
     private Trabajador trabajador;
+
+    /**
+     * Lista de justificaciones asociadas a la asistencia.
+     */
+    @OneToMany(mappedBy = "asistencia")
+    private List<Justificacion> justificaciones;
 
     /**
      * Obtiene el ID del permiso.
@@ -168,24 +218,6 @@ public class Asistencia {
     }
 
     /**
-     * Obtiene la justificación del permiso.
-     *
-     * @return la justificación del permiso.
-     */
-    public String getJustificacion() {
-        return justificacion;
-    }
-
-    /**
-     * Establece la justificación del permiso.
-     *
-     * @param justificacion la justificación a establecer.
-     */
-    public void setJustificacion(String justificacion) {
-        this.justificacion = justificacion;
-    }
-
-    /**
      * Obtiene el trabajador asociado al permiso.
      *
      * @return el trabajador asociado.
@@ -204,22 +236,167 @@ public class Asistencia {
     }
 
     /**
-     * Obtiene la evidencia del permiso.
+     * Obtiene la lista de justificaciones asociadas.
      *
-     * @return la evidencia del permiso.
+     * @return La lista de objetos Justificacion.
      */
-    public String getEvidencia() {
-        return evidencia;
+    public List<Justificacion> getJustificaciones() {
+        return justificaciones;
     }
 
     /**
-     * Establece la evidencia del permiso.
+     * Establece la lista de justificaciones asociadas.
      *
-     * @param evidencia la evidencia a establecer.
+     * @param justificaciones La lista de objetos Justificacion a establecer.
      */
-    public void setEvidencia(String evidencia) {
-        this.evidencia = evidencia;
+    public void setJustificaciones(List<Justificacion> justificaciones) {
+        this.justificaciones = justificaciones;
+    }
 
+    /**
+     * Obtiene la longitud de ingreso del trabajador. Representa la coordenada
+     * geográfica de la ubicación donde el trabajador marcó su entrada.
+     *
+     * @return La longitud de la ubicación de ingreso.
+     */
+    public Double getLongitudIngreso() {
+        return longitudIngreso;
+    }
+
+    /**
+     * Obtiene la latitud de ingreso del trabajador. Representa la coordenada
+     * geográfica de la ubicación donde el trabajador marcó su entrada.
+     *
+     * @return La latitud de la ubicación de ingreso.
+     */
+    public Double getLatitudIngreso() {
+        return latitudIngreso;
+    }
+
+    /**
+     * Establece la latitud de ingreso del trabajador. Representa la coordenada
+     * geográfica de la ubicación donde el trabajador marcó su entrada.
+     *
+     * @param latitudIngreso La latitud de la ubicación de ingreso a establecer.
+     */
+    public void setLatitudIngreso(Double latitudIngreso) {
+        this.latitudIngreso = latitudIngreso;
+    }
+
+    /**
+     * Establece la longitud de ingreso del trabajador. Representa la coordenada
+     * geográfica de la ubicación donde el trabajador marcó su entrada.
+     *
+     * @param longitudIngreso La longitud de la ubicación de ingreso a
+     * establecer.
+     */
+    public void setLongitudIngreso(Double longitudIngreso) {
+        this.longitudIngreso = longitudIngreso;
+    }
+
+    /**
+     * Obtiene la latitud de salida del trabajador. Representa la coordenada
+     * geográfica de la ubicación donde el trabajador marcó su salida.
+     *
+     * @return La latitud de la ubicación de salida.
+     */
+    public Double getLatitudSalida() {
+        return latitudSalida;
+    }
+
+    /**
+     * Establece la latitud de salida del trabajador. Representa la coordenada
+     * geográfica de la ubicación donde el trabajador marcó su salida.
+     *
+     * @param latitudSalida La latitud de la ubicación de salida a establecer.
+     */
+    public void setLatitudSalida(Double latitudSalida) {
+        this.latitudSalida = latitudSalida;
+    }
+
+    /**
+     * Obtiene la longitud de salida del trabajador. Representa la coordenada
+     * geográfica de la ubicación donde el trabajador marcó su salida.
+     *
+     * @return La longitud de la ubicación de salida.
+     */
+    public Double getLongitudSalida() {
+        return longitudSalida;
+    }
+
+    /**
+     * Establece la longitud de salida del trabajador. Representa la coordenada
+     * geográfica de la ubicación donde el trabajador marcó su salida.
+     *
+     * @param longitudSalida La longitud de la ubicación de salida a establecer.
+     */
+    public void setLongitudSalida(Double longitudSalida) {
+        this.longitudSalida = longitudSalida;
+    }
+
+    /**
+     * Obtiene el enlace a la ubicación de ingreso del trabajador. Este enlace
+     * puede redirigir a un mapa o mostrar más detalles de la ubicación de
+     * ingreso.
+     *
+     * @return El enlace a la ubicación de ingreso.
+     */
+    public String getLinkUbicacionIngreso() {
+        return linkUbicacionIngreso;
+    }
+
+    /**
+     * Establece el enlace a la ubicación de ingreso del trabajador. Este enlace
+     * puede redirigir a un mapa o mostrar más detalles de la ubicación de
+     * ingreso.
+     *
+     * @param linkUbicacionIngreso El enlace de ubicación de ingreso a
+     * establecer.
+     */
+    public void setLinkUbicacionIngreso(String linkUbicacionIngreso) {
+        this.linkUbicacionIngreso = linkUbicacionIngreso;
+    }
+
+    /**
+     * Obtiene el enlace a la ubicación de salida del trabajador. Este enlace
+     * puede redirigir a un mapa o mostrar más detalles de la ubicación de
+     * salida.
+     *
+     * @return El enlace a la ubicación de salida.
+     */
+    public String getLinkUbicacionSalida() {
+        return linkUbicacionSalida;
+    }
+
+    /**
+     * Establece el enlace a la ubicación de salida del trabajador. Este enlace
+     * puede redirigir a un mapa o mostrar más detalles de la ubicación de
+     * salida.
+     *
+     * @param linkUbicacionSalida El enlace de ubicación de salida a establecer.
+     */
+    public void setLinkUbicacionSalida(String linkUbicacionSalida) {
+        this.linkUbicacionSalida = linkUbicacionSalida;
+    }
+
+    /**
+     * Obtiene la fecha y hora en que se creó el registro de entrada o salida
+     * del trabajador.
+     *
+     * @return La fecha y hora de creación del registro.
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * Establece la fecha y hora en que se creó el registro de entrada o salida
+     * del trabajador.
+     *
+     * @param createdAt La fecha y hora de creación a establecer.
+     */
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
 }

@@ -7,6 +7,7 @@ package com.utp.epasamemvc.model;
 import jakarta.persistence.*;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -29,10 +30,7 @@ public class Permiso {
      */
     public Permiso() {
     }
-    
-    
 
-    
     /**
      * Identificador único del permiso.
      */
@@ -63,6 +61,7 @@ public class Permiso {
     /**
      * Descripción del motivo del permiso.
      */
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
 
     /**
@@ -77,9 +76,22 @@ public class Permiso {
     private String estado;
 
     /**
-     * Fecha en la que el permiso fue aprobado o rechazado.
+     * Fecha en la que el permiso fue aprobado.
      */
     private LocalDate fechaaprobado;
+
+    /**
+     * Fecha en la que el permiso fue rechazado.
+     */
+    private LocalDate fecharechazado;
+
+    /**
+     * Motivo del permiso.
+     */
+    @Column(columnDefinition = "TEXT")
+    private String motivo;
+
+    private LocalDateTime createdAt;
 
     /**
      * Trabajador al que se asocia este permiso.
@@ -266,6 +278,68 @@ public class Permiso {
      */
     public void setFechaaprobado(LocalDate fechaaprobado) {
         this.fechaaprobado = fechaaprobado;
+    }
+
+    /**
+     * Obtiene la fecha en que se rechazo la solicitud.
+     *
+     * @return la fecha de rechazo de la solicitud.
+     */
+    public LocalDate getFecharechazado() {
+        return fecharechazado;
+    }
+
+    /**
+     * Establece la fecha en que se rechazo la solicitud.
+     *
+     * @param fecharechazado la fecha de rechazo a establecer.
+     */
+    public void setFecharechazado(LocalDate fecharechazado) {
+        this.fecharechazado = fecharechazado;
+    }
+
+    /**
+     * Obtiene el motivo asociado a la justificación. El motivo puede ser
+     * utilizado para explicar la razón de la justificación, por ejemplo, si fue
+     * debido a una enfermedad o una emergencia.
+     *
+     * @return el motivo de la justificación
+     */
+    public String getMotivo() {
+        return motivo;
+    }
+
+    /**
+     * Establece el motivo asociado a la justificación. Este método permite
+     * asignar una razón o explicación para la justificación, como una
+     * enfermedad o algún otro evento que justifique la ausencia.
+     *
+     * @param motivo el motivo de la justificación
+     */
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    /**
+     * Obtiene la fecha y hora en la que fue creada la justificación. La fecha y
+     * hora de creación indican cuándo fue registrada la justificación en el
+     * sistema.
+     *
+     * @return la fecha y hora de creación de la justificación
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * Establece la fecha y hora en la que fue creada la justificación. Este
+     * método permite asignar la fecha y hora en la que se registró la
+     * justificación en el sistema.
+     *
+     * @param createdAt la fecha y hora de creación de la justificación
+     */
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
 }

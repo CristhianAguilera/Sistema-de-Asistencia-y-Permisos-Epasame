@@ -1,0 +1,184 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 24 oct 2024, 19:16:35
+    Author     : ADVANCE
+*/
+
+body {
+   
+    font-family: Arial, sans-serif;
+}
+
+header nav .nav-item .nav-link {
+    color: white;
+}
+
+header nav .nav-item ion-icon {
+    color: white;
+    width: 35px;
+    height: 35px;
+}
+
+header nav .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.Barralateral {
+    position: fixed;
+    width: 220px;
+    height: 100%;
+    background: #64657b;
+    display: flex;
+    overflow-y: auto;
+    flex-direction: column;
+    z-index: 2;
+    top: 0;
+}
+
+/* Estilo general para la barra de desplazamiento */
+.Barralateral::-webkit-scrollbar {
+    width: 10px; /* Ancho del scroll */
+}
+
+.Barralateral::-webkit-scrollbar-track {
+    background: #f4f4f4; /* Color del fondo de la barra de scroll */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.Barralateral::-webkit-scrollbar-thumb {
+    background: #7a7ab8; /* Color de la barra de scroll */
+    border-radius: 10px; /* Bordes redondeados */
+    border: 2px solid #f4f4f4; /* Borde para separar el thumb del track */
+}
+
+.Barralateral::-webkit-scrollbar-thumb:hover {
+    background: #5a5a88; /* Color al pasar el cursor sobre la barra */
+}
+
+/* Compatibilidad para otros navegadores con scrollbar "modernos" */
+.Barralateral {
+    scrollbar-color: #7a7ab8 #f4f4f4; /* thumb (barra) y track (fondo) */
+    scrollbar-width: thin; /* Scroll más delgado */
+}
+
+.Barralateral .LogoEpasame {
+
+    margin-top: 20px;
+    width: 180px;
+    height: 100px;
+    margin-left: 15px;
+    cursor: pointer;
+
+}
+
+.Barralateral .list-group .list-group-item {
+    padding: 20px;
+    background: #64657b;
+    border: #64657b;
+    display: flex;
+}
+
+.Barralateral .list-group .list-group-item:hover {
+    background: #7a7ab8;
+    cursor: pointer;
+
+}
+
+.Barralateral .list-group .list-group-item a {
+    text-decoration: none;
+    color: white;
+    margin-left: 20px;
+
+}
+
+.Barralateral .list-group .list-group-item ion-icon {
+    width: 35px;
+    height: 35px;
+
+}
+
+main {
+    /*border: 2px solid red;*/
+    margin-left: 220px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Ajusta la barra lateral */
+}
+
+.collapse:not(.show)+main {
+    margin-left: 0;
+    /* Si la barra lateral está colapsada, el margen se elimina */
+}
+
+h2{
+    text-align: center;
+}
+
+.dropdown-container {
+    display: none;
+    flex-direction: column;
+
+}
+
+.dropdown-container .list-group-item {
+    display: block;
+    width: 100%;
+    margin-left: 20px;
+}
+
+
+.container {
+    /*border: 2px solid blue;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+
+.container #Register-form .btn-enviar .btn {
+    background-color: black;
+    color: white;
+    width: 250px;
+    border-radius: 10px;
+}
+
+.container #Register-form .dropdown .dropdown-toggle {
+    border: 2px solid #e1e4e8;
+    width: 100%;
+    text-align: left;
+}
+
+
+
+@media (max-width: 1100px) {
+    .Barralateral {
+        transition: transform 0.4s ease;
+        transform: translateX(-100%);
+
+        /* Oculta la barra lateral por completo */
+    }
+
+    .collapse.show .Barralateral {
+        transition: transform 0.4s ease;
+        transform: translateX(0);
+        /* Muestra la barra lateral */
+    }
+
+    main {
+        margin-left: 0;
+        /* Elimina el margen en pantallas pequeñas */
+    }
+
+
+    .container {
+        margin-top: 100px;
+    }
+}

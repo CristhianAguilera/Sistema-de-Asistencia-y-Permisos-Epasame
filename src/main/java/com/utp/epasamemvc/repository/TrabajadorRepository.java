@@ -22,64 +22,99 @@ import org.springframework.data.domain.*;
 public interface TrabajadorRepository extends JpaRepository<Trabajador, Long> {
 
     /**
-     * Encuentra todos los trabajadores.
+     * Encuentra todos los trabajadores registrados.
      *
-     * @return una lista de todos los trabajadores registrados en la base de
-     * datos.
+     * @return una lista que contiene todos los trabajadores almacenados en la
+     * base de datos.
      */
     @Override
     List<Trabajador> findAll();
 
     /**
-     * Encuentra un trabajador por su correo electrónico.
+     * Encuentra un trabajador a partir de su correo electrónico.
      *
-     * @param correo el correo electrónico del trabajador que se desea buscar
-     * @return el trabajador asociado al correo electrónico especificado
+     * @param correo el correo electrónico del trabajador que se desea buscar.
+     * @return un objeto Trabajador que corresponde al correo electrónico
+     * especificado. Si no se encuentra ningún trabajador, el método puede
+     * retornar null.
      */
     Trabajador findByCorreo(String correo);
 
     /**
-     * Encuentra todos los trabajadores con un estado específico.
+     * Encuentra todos los trabajadores que tienen un estado específico.
      *
-     * @param estado el estado de los trabajadores que se desean buscar
-     * @return una lista de trabajadores que coinciden con el estado
-     * especificado
+     * @param estado el estado que se desea filtrar (por ejemplo: "Activo",
+     * "Inactivo").
+     * @return una lista que contiene los trabajadores que coinciden con el
+     * estado especificado.
      */
     List<Trabajador> findByEstado(String estado);
 
     /**
+     * Encuentra trabajadores con un estado específico y los retorna paginados.
+     *
+     * @param estado el estado de los trabajadores que se desea filtrar.
+     * @param p el objeto Pageable que contiene la configuración de paginación.
+     * @return una página que contiene los trabajadores que coinciden con el
+     * estado especificado.
+     */
+    Page<Trabajador> findByEstado(String estado, Pageable p);
+
+    /**
+     * Encuentra todos los trabajadores que tienen un rol específico.
+     *
+     * @param rol el rol que se desea filtrar (por ejemplo: "Administrador",
+     * "Empleado").
+     * @return una lista que contiene los trabajadores que coinciden con el rol
+     * especificado.
+     */
+    List<Trabajador> findByRol(String rol);
+
+    /**
+     * Encuentra trabajadores con un rol específico y los retorna paginados.
+     *
+     * @param rol el rol que se desea filtrar.
+     * @param p el objeto Pageable que contiene la configuración de paginación.
+     * @return una página que contiene los trabajadores que coinciden con el rol
+     * especificado.
+     */
+    Page<Trabajador> findByRol(String rol, Pageable p);
+
+    /**
      * Encuentra todos los trabajadores por su número de documento.
      *
-     * @param ndocumento el número de documento del trabajador que se desea
-     * buscar
-     * @return una lista de trabajadores que coinciden con el número de
-     * documento especificado
+     * @param ndocumento el número de documento que se desea buscar.
+     * @return una lista que contiene los trabajadores que coinciden con el
+     * número de documento especificado.
      */
     List<Trabajador> findByNdocumento(String ndocumento);
 
     /**
      * Encuentra todos los trabajadores por su número de teléfono.
      *
-     * @param telefono el número de teléfono del trabajador que se desea buscar
-     * @return una lista de trabajadores que coinciden con el número de teléfono
-     * especificado
+     * @param telefono el número de teléfono que se desea buscar.
+     * @return una lista que contiene los trabajadores que coinciden con el
+     * número de teléfono especificado.
      */
     List<Trabajador> findByTelefono(String telefono);
 
     /**
      * Encuentra todos los trabajadores por su contraseña.
      *
-     * @param contrasena la contraseña del trabajador que se desea buscar
-     * @return una lista de trabajadores que coinciden con la contraseña
-     * especificada
+     * @param contrasena la contraseña que se desea buscar.
+     * @return una lista que contiene los trabajadores que coinciden con la
+     * contraseña especificada. Nota: Usar este método con precaución por temas
+     * de seguridad.
      */
     List<Trabajador> findByContraseña(String contrasena);
 
     /**
-     * Encuentra un trabajador por su ID.
+     * Encuentra un trabajador por su ID único.
      *
-     * @param Trabajadorid el ID del trabajador que se desea buscar
-     * @return el trabajador correspondiente al ID especificado
+     * @param Trabajadorid el identificador único del trabajador que se desea
+     * buscar.
+     * @return un objeto Trabajador correspondiente al ID especificado. Si no se
+     * encuentra ningún trabajador, el método puede retornar null.
      */
     Trabajador findById(Integer Trabajadorid);
 

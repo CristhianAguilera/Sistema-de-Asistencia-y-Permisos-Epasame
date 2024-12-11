@@ -12,6 +12,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
               integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
               crossorigin="anonymous">
 
+        <!-- Estilos de PNotify -->
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotify.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/BrightTheme.css" rel="stylesheet">
+
         <!--Estilos css-->
         <link rel="stylesheet" href="/css/PrincipalAdmin.css">
     </head>
@@ -28,11 +32,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <ion-icon name="person-circle-sharp"></ion-icon>
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Administrador
+
                     </a>
 
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/">Cerrar sesión</a></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" style="display: inline;">
+                                <button type="submit" class="dropdown-item">Cerrar sesión</button>
+                            </form>
+                        </li>
                     </ul>
                     </li>
                 </div>
@@ -40,51 +48,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         </header>
 
         <!--Barra Lateral-->
-        <div class="collapse show " id="sidebar">
-            <div class="Barralateral">
-                <div class="LogoEpasame">
-                    <img src="/image/epasamelogo.png" alt="Epasame Logo" class="img-fluid">
-                </div>
-                <ul class="list-group mt-3">
-                    <li class="list-group-item" style="background: #7a7ab8;"><ion-icon name="person-add-outline"></ion-icon><a href="#">Registrar</a>
-                    </li>
-                    <li class="list-group-item"><ion-icon name="people-outline"></ion-icon><a href="/EmpleadosAdmin">Empleados</a>
-                    </li>
-                    <li class="list-group-item"><ion-icon name="calendar-outline"></ion-icon><a href="/AsistenciasAdmin">Asistencia</a>
-                    </li>
-                    <li class="list-group-item"><ion-icon name="clipboard-outline"></ion-icon><a href="/PermisosAdmin">Permisos</a>
-                    </li>
-                    <li class="list-group-item"><ion-icon name="reader-outline"></ion-icon><a href="/Reportes">Reporte</a></li>
-                    <li class="list-group-item"><ion-icon name="settings-outline"></ion-icon><a href="">Configuración</a>
-                    </li>
-                </ul>
-
-            </div>
-        </div>
+        <div th:replace="~{fragments/menuAdmin :: menuAdmin}"></div>
 
         <main>
             <div class="container mt-3">
+                <div id="miDiv"
+                     th:data-nombres="${trabajador.nombres}"
+                     hidden>
+                </div>
                 <div class="mensaje">
                     <h2>Registro</h2>
-                    <!-- Mensaje de alerta de exito -->
-                    <div th:if="${param.success}" class="alert alert-success" role="alert">
-                        ¡Registro exitoso!
-                    </div>
-
-                    <!-- Mensaje de alerta de error -->
-                    <div th:if="${param.error}" class="alert alert-danger" role="alert">
-                        ¡Registro fallido! Por favor, intenta nuevamente.
-                    </div>
-
-                    <div th:if="${param.error1}" class="alert alert-danger" role="alert">
-                        ¡Trabajador Registrado! Por favor, intenta nuevamente.
-                    </div>
-
 
                 </div>
 
                 <div class="form-container mt-4">
-                    <form th:action="@{/registertrabajador}" method="post" enctype="multipart/form-data" id="Register-form">
+                    <form  method="post" enctype="multipart/form-data" id="Register-form">
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="Nombres" class="form-label">Nombres</label>
@@ -105,8 +83,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="" class="form-label" >Tipo de Documento</label>
-                                <select name="tipoDocumento" class="form-select" aria-label="Default select example">
+                                <label for="tipoDocumento" class="form-label" >Tipo de Documento</label>
+                                <select name="tipoDocumento" id="tipoDocumento" class="form-select" aria-label="Default select example">
                                     <option selected>Selecione</option>
                                     <option value="DNI">DNI</option>
                                     <option value="CARNET EXT">CARNET EXT</option>
@@ -138,16 +116,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="" class="form-label" >Rol</label>
-                                <select name="rol" class="form-select" aria-label="Default select example">
-                                    <option selected>Selecione</option>
-                                    <option value="Administrador">Administrador</option>
-                                    <option value="Trabajador">Trabajador</option>
-                                </select>
-
-                            </div>
-
-                            <div class="col-md-4 mb-3">
                                 <label for="contrasena" class="form-label">Contraseña</label>
                                 <input type="password" class="form-control" id="contrasena" name="contrasena" required>
 
@@ -165,39 +133,74 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         </main>
 
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                // busaca las alertas en el documento
-                const alertSuccess = document.querySelector(".alert-success");
-                const alertError = document.querySelector(".alert-danger");
-
-                // duncion para poder ocultar la alerta en 3 segundos
-                function hideAlert(alert) {
-                    if (alert) {
-                        setTimeout(() => {
-                            alert.style.display = "none";
-                        }, 3000); // 3segundos
+            // Seleccionar ambos tipos de dropdown buttons
+            var dropdowns = document.querySelectorAll(".dropdown-btn, .dropdown-btn2");
+            dropdowns.forEach(function (dropdown) {
+                dropdown.addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === "block") {
+                        dropdownContent.style.display = "none";
+                    } else {
+                        dropdownContent.style.display = "block";
                     }
-                }
-
-                //llamado de la funcion
-                hideAlert(alertSuccess);
-                hideAlert(alertError);
-
-                /*Quitar los parámetros de la URL después de mostrar la alerta
-                  para evitar que al recargarse la pagina se muestre la alerta otra vez*/
-                if (window.history.replaceState) {
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete('success');
-                    url.searchParams.delete('error');
-                    url.searchParams.delete('error1');
-                    window.history.replaceState({path: url.href}, '', url.href);
-                }
+                });
             });
         </script>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
 
+                let divDatos = document.getElementById('miDiv');
+                let nombres = divDatos.getAttribute('data-nombres');
+                // Seleccionamos los campos del formulario
+                let nombreTrabajador = document.getElementById('navbarDropdown');
+                nombreTrabajador.textContent = nombres;
+            });
+        </script>
 
+        <script>
+            document.getElementById("Register-form").addEventListener("submit", function (event) {
+                event.preventDefault(); 
 
+                const formData = new FormData(this);
+
+                // Enviar solicitud AJAX
+                fetch("/registertrabajador", {
+                    method: "POST",
+                    body: formData
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                PNotify.success({
+                                    text: "¡Registro exitoso!",
+                                    delay: 3000
+                                });
+                            } else if (data.error) {
+                                PNotify.error({
+                                    text: data.error,
+                                    delay: 3000
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            PNotify.error({
+                                text: "Error al procesar la solicitud: " + error.message,
+                                delay: 3000
+                            });
+                        });
+            });
+        </script>
+
+        <script>
+            var img = document.getElementsByClassName("Imag")[0];
+            let sidebar = document.getElementById("sidebar");
+            img.addEventListener("click", function () {
+
+                sidebar.classList.remove("show");
+            });
+        </script>
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" 
                 integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" 
@@ -211,6 +214,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
 
+        <!-- Scripts de PNotify -->
+        <script src="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotify.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotifyButtons.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotifyButtons.css" rel="stylesheet">
 
     </body>
 </html>

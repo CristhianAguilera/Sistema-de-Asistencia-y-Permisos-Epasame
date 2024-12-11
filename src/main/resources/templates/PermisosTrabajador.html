@@ -5,12 +5,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Epasame-Administrador</title>
+        <title>Epasame-Trabajador</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
               crossorigin="anonymous">
+
+        <!-- Estilos de PNotify -->
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotify.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/BrightTheme.css" rel="stylesheet">
+
         <link rel="stylesheet" href="/css/PermisosTrabajador.css">
     </head>
     <body>
@@ -26,11 +31,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <ion-icon name="person-circle-sharp"></ion-icon>
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Trabajador
                     </a>
 
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/">Cerrar sesión</a></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" style="display: inline;">
+                                <button type="submit" class="dropdown-item">Cerrar sesión</button>
+                            </form>
+                        </li>
                     </ul>
                     </li>
                 </div>
@@ -38,36 +46,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         </header>
 
         <!--Barra Lateral-->
-        <div class="collapse show " id="sidebar">
-            <div class="Barralateral">
-                <div class="LogoEpasame">
-                    <img src="/image/epasamelogo.png" alt="Epasame Logo" class="img-fluid">
-                </div>
-                <ul class="list-group mt-3">
-                    <li class="list-group-item"><ion-icon name="calendar-outline"></ion-icon><a href="/PrincipalTrabajador">Asistencia</a>
-                    </li>
-                    <li class="list-group-item" style="background: #7a7ab8;"><ion-icon name="clipboard-outline"></ion-icon><a href="#">Permisos</a>
-                    </li>
-                    <li class="list-group-item"><ion-icon name="settings-outline"></ion-icon><a href="">Configuración</a>
-                    </li>
-                </ul>
-
-            </div>
-        </div>
+        <div th:replace="~{fragments/menuTrabajador :: menuTrabajador}"></div>
 
         <main>
 
             <div class="container mt-3">
                 <div class="mensaje">
                     <h2 >Registrar Permiso</h2>
-                    <div th:if="${param.errorpermiso}" class="alert alert-danger" role="alert">
-                        ¡Ya tiene un permiso en proceso!
-                    </div>
-                    <div th:if="${param.success}" class="alert alert-success" role="alert">
-                        ¡Permiso Registrado!
-                    </div>
+
+                    <div th:if="${param.success}" id="successMessage" data-message="¡Permiso Registrado!" ></div>
+                    <div th:if="${param.errorpermiso}" id="errorMessage" data-message="¡Ya tiene un permiso en proceso!" ></div>
+
+
                 </div>
-                <form th:action="@{/registerpermiso}" method="post" enctype="multipart/form-data">
+                <div id="miDiv"
+                     th:data-ndocumento="${trabajador.ndocumento}"
+                     th:data-correo="${trabajador.correo}"
+                     th:data-nombres="${trabajador.nombres}"
+                     th:data-diaspermiso="${trabajador.diaspermiso}"
+                     hidden>
+                </div>
+                <form th:action="@{/registerpermiso}" method="post" enctype="multipart/form-data" id="form-permi">
                     <div class="modal-body">
                         <div class="row mt-2">
                             <div class="col-sm-4 mb-sm-0">
@@ -75,7 +74,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     <div class="card-body">
                                         <h5 class="card-title">Correo</h5>
                                         <div class="form-floating">
-                                            <input type="email" class="form-control" id="Correo" name="Correo" aria-describedby="emailHelp" required>
+                                            <input type="email" class="form-control" 
+                                                   id="Correo" name="Correo" 
+                                                   aria-describedby="emailHelp" readonly required>
                                         </div>
                                     </div>
                                 </div>
@@ -109,7 +110,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     <div class="card-body">
                                         <h5 class="card-title">N° de Documento</h5>
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="NDocumento" name="NDocumento" required>
+                                            <input type="text" class="form-control" 
+                                                   id="NDocumento" name="NDocumento" required readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -135,10 +137,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <div class="col-sm-4 mt-4">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title">Descripción</h5>
+                                        <h5 class="card-title">Descripción (máx. 200 caracteres)</h5>
                                         <div class="form-floating">
                                             <textarea class="form-control" placeholder="Leave a comment here"
-                                                      id="descripcion" name="descripcion" required></textarea>
+                                                      id="descripcion" name="descripcion" maxlength="200" required></textarea>
 
                                         </div>
 
@@ -159,6 +161,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </div>
                         </div>
                     </div>
+                    <h5>Dias Disponibles:<a id="DiasDisponibles"></a></h5>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-dark">Registrar</button>
                     </div>
@@ -167,32 +170,115 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         </main>
 
         <script>
+            // Selecciona los campos de fecha
+            const fechaInicio = document.getElementById("fechainicio");
+            const fechaFin = document.getElementById("fechafin");
+
+// Obtén el número de días disponibles desde el atributo `data-diaspermiso`
+            const divDatos = document.getElementById('miDiv');
+            const ndiaspermiso = parseInt(divDatos.getAttribute('data-diaspermiso'));
+
+// Configura la fecha mínima para inicio y fin
+            const hoy = new Date().toISOString().split("T")[0];
+            fechaInicio.setAttribute("min", hoy);
+            fechaFin.setAttribute("min", hoy);
+
+// Evento para ajustar el límite máximo de `fechafin` al seleccionar `fechainicio`
+            fechaInicio.addEventListener("change", function () {
+                const fechaInicioSeleccionada = new Date(this.value);
+
+                if (!isNaN(fechaInicioSeleccionada.getTime())) {
+                    // Calcula la fecha límite con los días de permiso
+                    const fechaMaxima = new Date(fechaInicioSeleccionada);
+                    fechaMaxima.setDate(fechaInicioSeleccionada.getDate() + ndiaspermiso - 1);
+
+                    // Establece el valor mínimo y máximo para `fechafin`
+                    fechaFin.min = this.value; // La fecha de inicio seleccionada es el mínimo
+                    fechaFin.max = fechaMaxima.toISOString().split("T")[0];
+                }
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+
+                let divDatos = document.getElementById('miDiv');
+                let correo = divDatos.getAttribute('data-correo');
+                let ndocumento = divDatos.getAttribute('data-ndocumento');
+                let nombres = divDatos.getAttribute('data-nombres');
+                let diasdisponibles = divDatos.getAttribute('data-diaspermiso');
+
+                // Seleccionamos los campos del formulario
+                let modalCorreo = document.getElementById('Correo');
+                let modalNdocumento = document.getElementById('NDocumento');
+                let nombreTrabajador = document.getElementById('navbarDropdown');
+                let diasDisponibles = document.getElementById('DiasDisponibles');
+
+                modalCorreo.value = correo;
+                modalNdocumento.value = ndocumento;
+                nombreTrabajador.textContent = nombres;
+                diasDisponibles.textContent = diasdisponibles;
+            });
+        </script>
+
+        <script>
             document.addEventListener("DOMContentLoaded", function () {
-                // busaca las alertas en el documento
-                const alertSuccess = document.querySelector(".alert-success");
-                const alertError = document.querySelector(".alert-danger");
 
-                // duncion para poder ocultar la alerta en 3 segundos
-                function hideAlert(alert) {
-                    if (alert) {
-                        setTimeout(() => {
-                            alert.style.display = "none";
-                        }, 3000); // 3segundos
+                const successElement = document.getElementById("successMessage");
+                const errorElement = document.getElementById("errorMessage");
+
+                const successMessage = successElement ? successElement.getAttribute("data-message") : null;
+                const errorMessage = errorElement ? errorElement.getAttribute("data-message") : null;
+
+                if (successMessage) {
+                    PNotify.success({
+                        text: successMessage,
+                        delay: 3000
+                    });
+                }
+
+                if (errorMessage) {
+                    PNotify.notice({
+                        text: errorMessage,
+                        delay: 3000
+                    });
+                }
+
+                if (errorMessage || successMessage) {
+                    const url = new URL(window.location);
+                    url.searchParams.delete("errorMessage");
+                    url.searchParams.delete("successMessage");
+                    window.history.replaceState({}, document.title, url.pathname);
+                }
+
+
+            });
+        </script>
+
+        <script>
+            var img = document.getElementsByClassName("Imag")[0];
+            let sidebar = document.getElementById("sidebar");
+
+            img.addEventListener("click", function () {
+
+                sidebar.classList.remove("show");
+            });
+        </script>
+
+        <script>
+            // Seleccionar ambos tipos de dropdown buttons
+            var dropdowns = document.querySelectorAll(".dropdown-btn, .dropdown-btn2, .dropdown-btn3");
+
+            dropdowns.forEach(function (dropdown) {
+                dropdown.addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === "block") {
+                        dropdownContent.style.display = "none";
+                    } else {
+                        dropdownContent.style.display = "block";
                     }
-                }
-
-                //llamado de la funcion
-                hideAlert(alertSuccess);
-                hideAlert(alertError);
-
-                /*Quitar los parámetros de la URL después de mostrar la alerta
-                 para evitar que al recargarse la pagina se muestre la alerta otra vez*/
-                if (window.history.replaceState) {
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete('success');
-                    url.searchParams.delete('errorpermiso');
-                    window.history.replaceState({path: url.href}, '', url.href);
-                }
+                });
             });
         </script>
 
@@ -204,6 +290,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         crossorigin="anonymous"></script>
         <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+        <!-- Scripts de PNotify -->
+        <script src="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotify.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotifyButtons.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotifyButtons.css" rel="stylesheet">
 
 
     </body>

@@ -33,9 +33,36 @@ header nav .nav-item {
     height: 100%;
     background: #64657b;
     display: flex;
+    overflow-y: auto;
     flex-direction: column;
     z-index: 2;
-    transition: transform 0.4s ease;
+    top: 0;
+}
+
+/* Estilo general para la barra de desplazamiento */
+.Barralateral::-webkit-scrollbar {
+    width: 10px; /* Ancho del scroll */
+}
+
+.Barralateral::-webkit-scrollbar-track {
+    background: #f4f4f4; /* Color del fondo de la barra de scroll */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.Barralateral::-webkit-scrollbar-thumb {
+    background: #7a7ab8; /* Color de la barra de scroll */
+    border-radius: 10px; /* Bordes redondeados */
+    border: 2px solid #f4f4f4; /* Borde para separar el thumb del track */
+}
+
+.Barralateral::-webkit-scrollbar-thumb:hover {
+    background: #5a5a88; /* Color al pasar el cursor sobre la barra */
+}
+
+/* Compatibilidad para otros navegadores con scrollbar "modernos" */
+.Barralateral {
+    scrollbar-color: #7a7ab8 #f4f4f4; /* thumb (barra) y track (fondo) */
+    scrollbar-width: thin; /* Scroll más delgado */
 }
 
 .Barralateral .LogoEpasame {
@@ -43,6 +70,7 @@ header nav .nav-item {
     width: 180px;
     height: 100px;
     margin-left: 15px;
+    cursor: pointer;
 }
 
 .Barralateral .list-group .list-group-item {
@@ -68,6 +96,11 @@ header nav .nav-item {
     height: 35px;
 }
 
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
 main {
     /*border: 2px solid red;*/
     margin-left: 220px;
@@ -83,23 +116,18 @@ main {
     /* Si la barra lateral está colapsada, el margen se elimina */
 }
 
+.dropdown-container {
+    display: none;
+    flex-direction: column;
 
-.cuerpo {
-    /*border: 2px solid blue;*/
-    width: 900px;
-    height: 600px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-
-.cuerpo #Register-form .btn-enviar .btn {
-    background-color: black;
-    color: white;
-    width: 250px;
-    border-radius: 10px;
+.dropdown-container .list-group-item {
+    display: block;
+    width: 100%;
+    margin-left: 20px;
 }
+
 
 /* Buscador */
 .buscador-container {

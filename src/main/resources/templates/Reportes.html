@@ -4,9 +4,14 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Epasame E.I.R.L</title>
+        <title>Epasame-Administrador</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <!-- Estilos de PNotify -->
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotify.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/BrightTheme.css" rel="stylesheet"><!-- comment -->
+
         <link rel="stylesheet" href="/css/Reportes.css">
     </head>
 
@@ -23,11 +28,15 @@
                     <ion-icon name="person-circle-sharp"></ion-icon>
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Administrador
+
                     </a>
 
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/">Cerrar sesión</a></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" style="display: inline;">
+                                <button type="submit" class="dropdown-item">Cerrar sesión</button>
+                            </form>
+                        </li>
                     </ul>
                     </li>
                 </div>
@@ -35,79 +44,89 @@
         </header>
 
         <!--Barra Lateral-->
-        <div class="collapse show" id="sidebar">
-            <div class="Barralateral">
-                <div class="LogoEpasame">
-                    <img src="/image/epasamelogo.png" alt="Epasame Logo" class="img-fluid">
-                </div>
-                <ul class="list-group mt-3">
-                    <li class="list-group-item"><ion-icon name="person-add-outline"></ion-icon><a
-                        href="/PrincipalAdmin">Registrar</a>
-                    </li>
-                    <li class="list-group-item"><ion-icon name="people-outline"></ion-icon><a
-                        href="EmpleadosAdmin">Empleados</a>
-                    </li>
-                    <li class="list-group-item"><ion-icon name="calendar-outline"></ion-icon><a
-                        href="/AsistenciasAdmin">Asistencia</a>
-                    </li>
-                    <li class="list-group-item"><ion-icon name="clipboard-outline"></ion-icon><a
-                        href="/PermisosAdmin">Permisos</a>
-                    </li>
-                    <li class="list-group-item"  style="background: #7a7ab8;"><ion-icon name="reader-outline"></ion-icon><a href="/Reportes">Reporte</a>
-                    </li>
-                    <li class="list-group-item"><ion-icon name="settings-outline"></ion-icon><a href="#">Configuración</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <div th:replace="~{fragments/menuAdmin :: menuAdmin}"></div>
 
         <!-- Principal -->
         <main>
             <div class="container mt-3">
-                <h2>Reporte de Asistencia</h2>
-                <div class="filtros-container mt-4">
-                    <div class="input-group">
-                        <span class="input-group-text">Desde</span>
-                        <input type="date" class="form-control select-date">
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-text">Hasta</span>
-                        <input type="date" class="form-control select-date">
-                    </div>
-                    <div class="input-group">
-                        <button class="btn aplicar" type="button" id="buscarFechas">Filtrar</button>
-                    </div>
-
-
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <ion-icon name="search-outline"></ion-icon>
-                        </span>
-                        <input type="text" id="buscarEmpleado" class="form-control buscador"
-                               placeholder="Buscar empleado...">
-                    </div>
+                <div id="miDiv" th:data-nombres="${trabajador.nombres}" hidden>
                 </div>
+                <h2>Reporte de Asistencia</h2>
+                <form th:action="@{/Reportes}" method="get">
+                    <div class="filtros-container mt-4">
+                        <div class="input-group">
+                            <span class="input-group-text">Desde</span>
+                            <input type="date" name="desde" id="desde" class="form-control select-date" th:value="${desde}"
+                                   required>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">Hasta</span>
+                            <input type="date" name="hasta" id="hasta" class="form-control select-date" th:value="${hasta}"
+                                   required>
+                        </div>
+                        <div class="input-group">
+                            <button class="btn aplicar" type="submit" id="buscarFechas">Filtrar</button>
+                            <button class="btn limpiar" type="button" id="limpiarFiltros"
+                                    onclick="limpiarFiltros()">Limpiar</button>
+                        </div>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <ion-icon name="search-outline"></ion-icon>
+                            </span>
+                            <input type="text" id="buscarEmpleado" class="form-control buscador"
+                                   placeholder="Buscar empleado...">
+                        </div>
+
+                    </div>
+                </form>
 
                 <div class="table-responsive">
                     <table class="table table-striped mt-4">
                         <thead>
                             <tr>
+                                <th scope="col">Fecha</th>
                                 <th scope="col">Trabajador</th>
                                 <th scope="col">Cargo</th>
-                                <th scope="col">Asistió</th>
-                                <th scope="col">No Asistió</th>
+                                <th scope="col">Ingreso</th>
+                                <th scope="col">Salida</th>
+                                <th scope="col">Asistencia</th>
+                                <th scope="col">Inasistencia</th>
+                                <th scope="col">Tardanza</th>
+                                <th scope="col">Justificaciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- iteraramos sobre los trabajadores para mostrar sus datos-->
-                            <tr th:each="asistencia: ${asistencias}">
+                            <tr th:each="asistencia : ${asistencias}">
+                                <td th:text="${asistencia.fecha}"></td>
                                 <td th:text="${asistencia.trabajador.nombres}"></td>
                                 <td th:text="${asistencia.trabajador.cargo}"></td>
-                                <td class="fila-b">
-                                    <button type="button" class="btn btn-outline-dark">PRES</button>
+                                <td th:text="${asistencia.horaingreso}"></td>
+                                <td th:text="${asistencia.horasalida}"></td>
+                                <td>
+                                    <span th:if="${asistencia.estado == 'Presente' 
+                                          || asistencia.estado == 'Salida'}">
+                                        <ion-icon name="checkmark-circle" style="color: green;"></ion-icon>
+                                    </span>
                                 </td>
-                                <td class="fila-b">
-                                    <button type="button" class="btn btn-outline-dark">NOPR</button>
+                                <td>
+                                    <span th:if="${asistencia.estado == 'Inasistencia'}">
+                                        <ion-icon name="close-circle" style="color: red;"></ion-icon>
+                                    </span>
+                                </td>
+                                <td>
+                                    <!-- Mostrar icono de tardanza si el estado es 'Tardanza' -->
+                                    <span th:if="${asistencia.estado == 'Tardanza'}">
+                                        <ion-icon name="alert-circle" style="color: rgb(255, 200, 0);"></ion-icon>
+                                    </span>
+                                </td>
+                                
+                                <td>
+                                    <!-- Mostrar icono de tardanza si el estado es 'Tardanza' -->
+                                    <span th:if="${asistencia.estado == 'Justificada'}">
+                                        <ion-icon name="checkmark-circle" style="color: green;"></ion-icon>
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -115,21 +134,144 @@
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
-                    <button class="btn print"><ion-icon name="print-outline"></ion-icon> Imprimir</button>
-                    <div class="pagination">
-                        <a href="#" class="btn pag"><ion-icon name="arrow-back-outline"></ion-icon>Anterior</a>
-                        <span class="btn mx-2">1</span>
-                        <a href="#" class="btn pag">Siguiente<ion-icon name="arrow-forward-outline"></ion-icon></a>
-                    </div>
+                    <!-- Botón para imprimir registros filtrados -->
+                    <button class="btn print" onclick="imprimirFiltrado()" aria-label="Imprimir registros filtrados">
+                        <ion-icon name="print-outline"></ion-icon> Imprimir filtrado
+                    </button>
+                    <button class="btn print" onclick="imprimirTodo()" aria-label="Imprimir todos los registros">
+                        <ion-icon name="print-outline"></ion-icon> Imprimir todo
+                    </button>
+                    <nav>
+                        <ul class="pagination">
+                            <!-- Botón de página anterior -->
+                            <li class="page-item" th:classappend="${asistencias.first} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/Reportes(page=${asistencias.number - 1}, desde=${desde}, hasta=${hasta})}">
+                                    Anterior
+                                </a>
+                            </li>
+
+                            <!-- Números de página -->
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, asistencias.totalPages - 1)}"
+                                th:classappend="${i == asistencias.number} ? 'active'">
+                                <a class="page-link" th:href="@{/Reportes(page=${i}, desde=${desde}, hasta=${hasta})}"
+                                   th:text="${i + 1}"></a>
+                            </li>
+
+                            <!-- Botón de página siguiente -->
+                            <li class="page-item" th:classappend="${asistencias.last} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/Reportes(page=${asistencias.number + 1}, desde=${desde}, hasta=${hasta})}">
+                                    Siguiente
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
-        </main>
+        </div>
+    </main>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    </body>
+    <script>
+        function imprimirTodo() {
+            window.location.href = '/imprimirTodo';
+        }
+
+        async function imprimirFiltrado() {
+            let fechaInicio = document.getElementById('desde').value;
+            let fechaFin = document.getElementById('hasta').value;
+
+            if (!fechaInicio && !fechaFin) {
+                alert("Debe seleccionar al menos una fecha para filtrar el reporte.");
+                return; // Evita la solicitud
+            }
+
+            let url = `/imprimirFiltrado?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    // Manejar errores: Leer el mensaje del servidor
+                    const errorData = await response.json();
+                    alert(errorData.message); // Mostrar el mensaje de error al usuario
+                    return;
+                }
+
+                // Descargar el archivo si la respuesta es exitosa
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'reporte_asistencias_filtrado.pdf';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(downloadUrl);
+            } catch (error) {
+                alert("Ocurrió un error al procesar la solicitud. Inténtelo de nuevo.");
+            }
+        }
+    </script>
+
+    <script>
+        // Seleccionar ambos tipos de dropdown buttons
+        var dropdowns = document.querySelectorAll(".dropdown-btn, .dropdown-btn2");
+
+        dropdowns.forEach(function (dropdown) {
+            dropdown.addEventListener("click", function () {
+                this.classList.toggle("active");
+                var dropdownContent = this.nextElementSibling;
+                if (dropdownContent.style.display === "block") {
+                    dropdownContent.style.display = "none";
+                } else {
+                    dropdownContent.style.display = "block";
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.getElementById('limpiarFiltros').addEventListener('click', function () {
+                window.location.href = window.location.pathname;
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            let divDatos = document.getElementById('miDiv');
+            let nombres = divDatos.getAttribute('data-nombres');
+            // Seleccionamos los campos del formulario
+            let nombreTrabajador = document.getElementById('navbarDropdown');
+
+            nombreTrabajador.textContent = nombres;
+        });
+    </script>
+
+    <script>
+        var img = document.getElementsByClassName("Imag")[0];
+        let sidebar = document.getElementById("sidebar");
+
+        img.addEventListener("click", function () {
+
+            sidebar.classList.remove("show");
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- Scripts de PNotify -->
+    <script src="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotifyButtons.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@pnotify/core/dist/PNotifyButtons.css" rel="stylesheet">
+
+</body>
 
 </html>

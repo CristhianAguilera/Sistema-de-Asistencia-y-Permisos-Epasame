@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <div class="collapse show " id="sidebar" th:fragment="menuAdmin">
+            <div class="Barralateral">
+                <div class="LogoEpasame">
+                    <a class="Imag">
+                        <img src="/image/epasamelogo.png" alt="Epasame Logo" class="img-fluid">
+                    </a>
+                </div>
+                <ul class="list-group mt-3">
+                    <li class="list-group-item"><ion-icon name="person-add-outline"></ion-icon><a href="/PrincipalAdmin">Registrar</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="people-outline"></ion-icon><a href="/EmpleadosAdmin">Empleados</a>
+                    </li>
+                    <li class="list-group-item"><ion-icon name="calendar-outline"></ion-icon><a href="/AsistenciasAdmin">Asistencia</a>
+                    </li>
+                    <button class="list-group-item dropdown-btn"> 
+                        <ion-icon name="clipboard-outline"></ion-icon><a href="#">Permisos</a>
+                    </button>
+                    <div class="dropdown-container">
+                        <li class="list-group-item">
+                        <ion-icon name="reader-outline"></ion-icon>
+                        <a href="/PermisosAdmin">Gestionar Pendientes</a>
+                        </li>
+
+                        <li class="list-group-item">
+                        <ion-icon name="file-tray-full-outline"></ion-icon>
+                        <a href="/VerPermisosAdmin">Ver Permisos</a>
+                        </li>
+                    </div>
+
+                    <button class="list-group-item dropdown-btn2">
+                        <ion-icon name="receipt-outline"></ion-icon>
+                        <a href="#">Justificaciones</a>
+                    </button>
+                    <div class="dropdown-container">
+                        <li class="list-group-item" >
+                        <ion-icon name="reader-outline"></ion-icon>
+                        <a href="/JustificacionesAdmin">Gestionar Pendientes</a>
+                        </li>
+
+                        <li class="list-group-item">
+                        <ion-icon name="file-tray-full-outline"></ion-icon>
+                        <a href="/VerJustificacionesAdmin">Ver Justificacion</a>
+                        </li>
+                    </div>
+
+                    <li class="list-group-item"><ion-icon name="reader-outline">
+
+                    </ion-icon><a href="/Reportes">Reporte</a></li>
+
+                    <li class="list-group-item"><ion-icon name="settings-outline">
+
+                    </ion-icon><a href="#" data-bs-toggle="modal" data-bs-target="#modalValidacion">Configuración</a>
+                    </li>
+                </ul>
+
+            </div>
+
+            <!-- Modal para validación de contraseña -->
+            <div class="modal fade" id="modalValidacion" tabindex="-1" aria-labelledby="modalValidacionLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" id="formValidacion">   
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalValidacionLabel">Validación de Contraseña</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="mb-3">
+                                    <label for="passwordActual" class="form-label">Ingrese su contraseña actual</label>
+                                    <input type="password" class="form-control" id="passwordActual" name="passwordActual" required>
+                                </div>
+                                <div class="alert alert-danger d-none" id="errorMensaje">Contraseña incorrecta. Intente nuevamente.</div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" id="validarPassword">Ingresar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.getElementById("formValidacion").addEventListener("submit", function (event) {
+                    event.preventDefault(); // Evitar el envío tradicional del formulario
+
+                    const passwordIngresada = document.getElementById("passwordActual").value; // Obtener la contraseña ingresada
+
+                    // Crear el FormData para enviarlo al servidor
+                    const formData = new FormData();
+                    formData.append("passwordActual", passwordIngresada);
+
+                    // Realizar la solicitud AJAX con fetch
+                    fetch("/validarContraseña", {
+                        method: "POST",
+                        body: formData
+                    })
+                            .then(response => response.json()) // Asegurarse que la respuesta sea en formato JSON
+                            .then(data => {
+                                if (data.success) {
+                                    // Si la contraseña es correcta, mostramos el mensaje de éxito
+                                    PNotify.success({
+                                        text: "Contraseña válida. Redirigiendo...",
+                                        delay: 2000
+                                    });
+
+                                    // Redirigir al usuario a la página de configuración
+                                    setTimeout(function () {
+                                        window.location.href = '/ConfiguracionAdmin';  // Redirige a la configuración
+                                    }, 2000);
+                                } else {
+                                    // Si la contraseña es incorrecta, mostramos el mensaje de error
+                                    PNotify.error({
+                                        text: data.error,
+                                        delay: 3000
+                                    });
+
+                                    // Limpiar el campo de la contraseña para que el usuario intente de nuevo
+                                    document.getElementById("passwordActual").value = '';
+                                }
+                            })
+                            .catch(error => {
+                                // Si ocurre un error, mostrar mensaje de error
+                                PNotify.error({
+                                    text: "Error al procesar la solicitud: " + error.message,
+                                    delay: 3000
+                                });
+                            });
+                });
+            </script>
+
+        </div>
+    </body>
+</html>
